@@ -1,0 +1,67 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "Producto de verdulería o frutería para catálogo y pedidos",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Identificador único del producto"
+        },
+        "nombre": {
+          "type": "string",
+          "description": "Nombre comercial del producto",
+          "maxLength": 120
+        },
+        "categoria": {
+          "type": "string",
+          "description": "Categoría (verduras, frutas, citricos, etc.)",
+          "maxLength": 50
+        },
+        "precio": {
+          "type": "number",
+          "description": "Precio en pesos argentinos por unidad de venta"
+        },
+        "unidad": {
+          "type": "string",
+          "description": "Unidad de medida (kg, unidad, atado, bolsa)",
+          "maxLength": 20
+        },
+        "imagen": {
+          "type": "string",
+          "description": "URL de imagen o data URL de foto"
+        },
+        "descripcion": {
+          "type": "string",
+          "description": "Descripción breve del producto",
+          "maxLength": 500
+        },
+        "destacado": {
+          "type": "boolean",
+          "description": "Si aparece destacado en ofertas del día"
+        },
+        "etiqueta": {
+          "type": "string",
+          "description": "Etiqueta o badge promocional (Oferta, Del Día, etc.)",
+          "maxLength": 50
+        },
+        "disponible": {
+          "type": "boolean",
+          "description": "Disponibilidad de stock actual"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp ISO o servidor de última actualización"
+        }
+      },
+      "required": ["nombre", "categoria", "precio", "unidad", "disponible"]
+    }
+  },
+  "firestore": {
+    "/productos/{productId}": {
+      "schema": "Product",
+      "description": "Colección de productos frescos del puesto de Roli"
+    }
+  }
+}

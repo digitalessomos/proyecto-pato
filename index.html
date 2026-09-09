@@ -3,13 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pastelería Pato | Tortas, Facturas y Delicias Artesanales en Haedo</title>
-  <meta name="description" content="Pastelería y confitería artesanal en Nervo y Laínez, Haedo, Buenos Aires. Tortas de diseño, facturas de manteca recién horneadas, alfajores de maicena y dulce de leche casero.">
-  <meta property="og:title" content="Pastelería Pato | Tortas, Facturas y Delicias Artesanales en Haedo" />
-  <meta property="og:description" content="Pastelería y confitería artesanal en Nervo y Laínez, Haedo, Buenos Aires. Tortas de diseño, facturas de manteca recién horneadas, alfajores de maicena y dulce de leche casero." />
+  <title>Pastelería Pato | Pastelería Artesanal en Haedo, Buenos Aires</title>
+  <meta name="description" content="Tienda online y panel de administración para Pastelería Pato en Haedo, Buenos Aires. Tortas artesanales, tartas dulces y pedidos por WhatsApp con sincronización en tiempo real.">
+  <meta property="og:title" content="Pastelería Pato | Pastelería Artesanal en Haedo, Buenos Aires" />
+  <meta property="og:description" content="Tienda online y panel de administración para Pastelería Pato en Haedo, Buenos Aires. Tortas artesanales, tartas dulces y pedidos por WhatsApp con sincronización en tiempo real." />
   
-  <!-- Favicon temático de pastelería -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍰</text></svg>">
+  <!-- Favicon artesanal de pastelería -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
+
+  <!-- Import Map para soporte nativo de módulos Firebase en navegadores -->
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js"
+      }
+    }
+  </script>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -19,24 +30,21 @@
         extend: {
           colors: {
             brand: {
-              50: '#FDF8F3',
-              100: '#FBE8D8',
-              200: '#F7D0B2',
-              300: '#F0B185',
-              400: '#E58A54',
-              500: '#D97706',
-              600: '#B45309',
-              700: '#92400E',
-              800: '#78350F',
-              900: '#451A03',
-              950: '#2E1002',
-            },
-            accent: {
-              400: '#FB7185',
+              50: '#FDF4F5',
+              100: '#FCE7EB',
+              200: '#F9CFD7',
               500: '#E11D48',
               600: '#BE123C',
+              700: '#9F1239',
+              800: '#881337',
+              900: '#4C0519',
             },
-            darkhero: '#170C06'
+            accent: {
+              400: '#FBBF24',
+              500: '#F59E0B',
+              600: '#D97706',
+            },
+            darkhero: '#150A0D'
           },
           fontFamily: {
             display: ['Outfit', 'sans-serif'],
@@ -60,7 +68,7 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-  <!-- Canvas Confetti vía CDN para microinteracciones dulces -->
+  <!-- Canvas Confetti vía CDN para microinteracciones de fiesta -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
   <!-- Estilos Personalizados del Proyecto -->
@@ -70,46 +78,55 @@
     [x-cloak] { display: none !important; }
   </style>
 
-  <!-- Capa de Datos, Configuración Centralizada, Carrito y Servicios Desacoplados -->
-  <script src="data/config.js"></script>
-  <script src="data/products.js"></script>
-  <script src="js/productsService.js"></script>
-  <script src="js/cart.js"></script>
-  <script src="js/app.js"></script>
+  <!-- Import Map para resolución estándar en navegadores (Netlify, GitHub Pages, Local) -->
+  <script type="importmap">
+    {
+      "imports": {
+        "alpinejs": "https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/module.esm.js",
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js"
+      }
+    }
+  </script>
 
-  <!-- Alpine.js Core (Carga diferida luego de registrar componentes) -->
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js"></script>
+  <!-- Capa de Datos y Configuración Base -->
+  <script type="module" src="data/config.js"></script>
+  <script type="module" src="data/products.js"></script>
+
+  <!-- Aplicación Principal Modular (Alpine.js + Carrito Reactivo + Catálogo y Firestore) -->
+  <script type="module" src="js/app.js"></script>
 
   <!-- Sincronización en Tiempo Real de LocalStorage entre Pestañas -->
   <script>
     window.addEventListener('storage', function(event) {
-      const storageKey = (window.productsService && window.productsService.STORAGE_KEY) || 'pasteleria_pato_products_v1';
+      const storageKey = (window.productsService && window.productsService.STORAGE_KEY) || 'pato_pasteleria_products_v1';
       if (event.key === storageKey || !event.key) {
-        console.log('⚡ [index.html] Cambio en localStorage detectado. Actualizando pastelería...');
+        console.log('⚡ [index.html] Cambio en localStorage detectado. Actualizando tienda...');
         window.dispatchEvent(new CustomEvent('products-updated'));
       }
     });
   </script>
 </head>
 
-<body class="bg-[#FAF9F6] text-gray-800 antialiased font-body" x-data="pasteleriaApp">
+<body class="bg-[#FAF6F5] text-gray-800 antialiased font-body" x-data="verduleriaApp">
 
   <!-- ========================================================================
-       1. TOPBAR DE ESTADO & UBICACIÓN DE HAEDO
+       1. TOPBAR DE ESTADO & UBICACIÓN DEL BARRIO
        ======================================================================== -->
-  <div class="bg-brand-950 text-brand-100 text-xs py-2 px-4 border-b border-brand-900">
+  <div class="bg-brand-900 text-brand-100 text-xs py-2 px-4 border-b border-brand-800/60">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-1 text-center sm:text-left">
       <div class="flex items-center gap-2 font-medium">
-        <span class="inline-flex items-center justify-center w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-        <span>Haedo, Buenos Aires: <strong class="text-white font-semibold">Nervo y Laínez</strong></span>
+        <span class="inline-flex items-center justify-center w-2 h-2 rounded-full bg-rose-400 animate-pulse"></span>
+        <span>Haedo: <strong class="text-white font-semibold">Nervo y Lainez</strong></span>
       </div>
-      <div class="flex items-center gap-4 text-brand-200/90 text-[11px]">
-        <span>🕒 Lun a Sáb: 8:00 a 13:00 | 16:00 a 20:00 hs • Dom: 8:30 a 13:30 hs</span>
+      <div class="flex items-center gap-4 text-rose-200/90 text-[11px]">
+        <span>🕒 Mar a Sáb: 9:00 a 13:00 | 16:30 a 20:00 • Dom: 9:00 a 13:30 hs</span>
         <span class="hidden md:inline text-white/40">•</span>
-        <span class="hidden md:inline text-amber-300 font-medium">¡Horneado artesanal del día!</span>
+        <span class="hidden md:inline text-white font-medium">¡Horneado fresco todos los días!</span>
         <span class="text-white/40">•</span>
         <a href="admin.html" class="text-amber-300 hover:text-white font-bold flex items-center gap-1 transition-colors">
-          <span>⚙️ Panel Dueña</span>
+          <span>⚙️ Panel Dueño</span>
         </a>
       </div>
     </div>
@@ -123,24 +140,24 @@
       
       <!-- Logo e Identidad -->
       <a href="#" class="flex items-center gap-3 group">
-        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center text-2xl shadow-lg shadow-amber-600/30 group-hover:scale-105 transition-transform">
-          🍰
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-2xl shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
+          🎂
         </div>
         <div>
           <div class="flex items-center gap-2">
             <span class="text-xl sm:text-2xl font-black text-white tracking-tight font-display">PASTELERÍA PATO</span>
-            <span class="hidden sm:inline-block text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">Haedo</span>
+            <span class="hidden sm:inline-block text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-brand-500/20 text-rose-300 border border-brand-500/30">Artesanal</span>
           </div>
-          <p class="text-[11px] text-amber-200/80 font-medium">Tortas, Facturas y Delicias Artesanales • Nervo y Laínez</p>
+          <p class="text-[11px] text-gray-400 font-medium">Tortas, Tartas y Delicias Caseras • Haedo, Buenos Aires</p>
         </div>
       </a>
 
       <!-- Menú de Navegación Rápida -->
-      <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-amber-100/90">
-        <a href="#inicio" class="hover:text-amber-400 transition-colors">Inicio</a>
-        <a href="#catalogo" class="hover:text-amber-400 transition-colors">Especialidades y Precios</a>
-        <a href="#el-puesto" class="hover:text-amber-400 transition-colors">El Obrador</a>
-        <a href="#ubicacion" class="hover:text-amber-400 transition-colors">Cómo Llegar</a>
+      <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-gray-300">
+        <a href="#inicio" class="hover:text-rose-400 transition-colors">Inicio</a>
+        <a href="#catalogo" class="hover:text-rose-400 transition-colors">Nuestras Delicias</a>
+        <a href="#el-puesto" class="hover:text-rose-400 transition-colors">Sobre Pato</a>
+        <a href="#ubicacion" class="hover:text-rose-400 transition-colors">Cómo Llegar</a>
       </nav>
 
       <!-- Botones de Acción: Carrito, Admin y WhatsApp -->
@@ -148,30 +165,30 @@
         
         <!-- Acceso al Panel de Control Admin -->
         <a href="admin.html" 
-           title="Abrir Panel de Control de la Dueña"
+           title="Abrir Panel de Control del Dueño"
            class="inline-flex items-center gap-1.5 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 text-amber-300 hover:text-amber-200 text-xs font-bold py-2 px-2.5 sm:px-3 rounded-xl transition-all">
           <span>⚙️</span>
           <span class="hidden sm:inline">Admin</span>
         </a>
 
-        <!-- Botón del Pedido / Carrito Reactivo -->
+        <!-- Botón del Changuito / Carrito Reactivo -->
         <button @click="$store.cart.openDrawer()" 
                 class="relative inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs sm:text-sm font-semibold py-2 px-3 sm:px-4 rounded-xl backdrop-blur-md active:scale-95 transition-all"
                 title="Ver mi pedido">
-          <span class="text-base sm:text-lg">🛍️</span>
+          <span class="text-base sm:text-lg">🧺</span>
           <span class="hidden sm:inline">Mi Pedido</span>
           <!-- Badge contador -->
           <span x-show="$store.cart.totalCount > 0"
                 x-text="$store.cart.totalCount"
-                class="cart-badge-counter bg-amber-500 text-white text-[11px] font-black w-5 h-5 rounded-full flex items-center justify-center border border-white/40 shadow-sm">
+                class="cart-badge-counter bg-brand-500 text-white text-[11px] font-black w-5 h-5 rounded-full flex items-center justify-center border border-white/40 shadow-sm">
           </span>
         </button>
 
-        <a :href="getWhatsAppGeneralLink('Hola Pato! Te escribo desde la web de Pastelería Pato para hacerte una consulta.')"
-           href="https://wa.me/5491159665917?text=Hola%20Pato!%20Te%20escribo%20desde%20la%20web%20de%20Pastelería%20Pato%20para%20hacerte%20una%20consulta." 
+        <a :href="getWhatsAppGeneralLink('Hola Pato! Te escribo desde la página web para hacerte una consulta sobre las tortas.')"
+           href="https://wa.me/5491159665917?text=Hola%20Pato!%20Te%20escribo%20desde%20la%20página%20web%20para%20hacerte%20una%20consulta%20sobre%20las%20tortas." 
            target="_blank" 
            rel="noopener noreferrer"
-           class="inline-flex items-center gap-2 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white text-xs sm:text-sm font-semibold py-2 px-3 sm:px-4 rounded-xl shadow-lg shadow-amber-950/40 hover:shadow-amber-500/30 active:scale-95 transition-all">
+           class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs sm:text-sm font-semibold py-2 px-3 sm:px-4 rounded-xl shadow-lg shadow-emerald-900/30 hover:shadow-emerald-500/20 active:scale-95 transition-all">
           <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
             <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.299.144.35.49 1.197.533 1.284.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.357.101.174.449.741.964 1.201.662.591 1.221.774 1.394.861.174.086.275.073.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.072.043.419-.101.824z"/>
           </svg>
@@ -183,56 +200,64 @@
   </header>
 
   <!-- ========================================================================
-       3. HERO CINEMATOGRÁFICO CON FOTOGRAFÍA GASTRONÓMICA
+       3. HERO CINEMATOGRÁFICO CON SLIDER ELEGANTE
        ======================================================================== -->
   <section id="inicio" class="hero-container relative">
     
-    <!-- IMAGEN DE FONDO DE ALTA CALIDAD DE PASTELERÍA -->
+    <!-- CONTENEDOR DE MEDIOS DEL HERO: IMAGEN DINÁMICA DE ALTA CALIDAD -->
     <div class="absolute inset-0 w-full h-full overflow-hidden z-0">
-      <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1920&q=80" 
-           alt="Tortas y pastelería artesanal en Haedo"
-           class="w-full h-full object-cover filter brightness-[0.48] contrast-[1.12] scale-105 pointer-events-none transition-transform duration-1000">
+      <template x-if="slides && slides.length > 0">
+        <img :src="slides[currentSlide] ? slides[currentSlide].imagen : 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1920&q=80'" 
+             :alt="slides[currentSlide] ? slides[currentSlide].titulo : 'Pastelería Pato en Haedo'"
+             class="w-full h-full object-cover filter brightness-[0.48] contrast-[1.10] scale-105 pointer-events-none transition-all duration-700">
+      </template>
+      <template x-if="!slides || slides.length === 0">
+        <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1920&q=80" 
+             alt="Pastelería Pato en Haedo"
+             class="w-full h-full object-cover filter brightness-[0.48] contrast-[1.10] scale-105 pointer-events-none">
+      </template>
 
-      <!-- Overlay con gradiente para garantizar contraste absoluto del texto -->
+      <!-- Overlay con gradiente cinematográfico para garantizar contraste total del texto -->
       <div class="absolute inset-0 hero-overlay z-20 pointer-events-none"></div>
     </div>
 
     <!-- CONTENIDO DEL HERO -->
     <div class="relative z-30 max-w-5xl mx-auto px-4 sm:px-6 py-20 sm:py-28 text-center flex flex-col items-center">
       
-      <!-- Pill Badge de Ubicación y Tradición -->
+      <!-- Pill Badge de Ubicación y Confianza -->
       <div class="glass-badge inline-flex items-center gap-2.5 px-4 py-2 rounded-full text-white text-xs sm:text-sm font-medium mb-6 shadow-xl animate-fade-in">
         <span class="flex h-2.5 w-2.5 relative">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
         </span>
-        <span>🍰 Obrador Artesanal & Confitería</span>
+        <span x-text="slides[currentSlide] ? slides[currentSlide].badge : '🎂 Horneado del Día'">🎂 Horneado del Día</span>
         <span class="text-white/40">•</span>
-        <span class="text-amber-300 font-semibold">Nervo y Laínez, Haedo</span>
+        <span class="text-rose-300 font-semibold">Nervo y Lainez, Haedo</span>
       </div>
 
       <!-- Título Principal de Impacto -->
       <h1 class="text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[1.08] mb-6 font-display drop-shadow-md">
-        Pastelería de Barrio <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-200 to-yellow-100">Hecha con Amor</span>
+        Pastelería Artesanal <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-rose-300 to-amber-100">con Amor y Pasión</span>
       </h1>
 
       <!-- Subtítulo Apetitoso -->
-      <p class="text-lg sm:text-xl md:text-2xl text-amber-100/90 max-w-3xl font-light mb-8 leading-relaxed drop-shadow">
-        Del obrador de Pato a tu mesa: tortas de autor, medialunas de manteca recién salidas del horno, alfajores caseros y el auténtico dulce de leche argentino.
+      <p class="text-lg sm:text-xl md:text-2xl text-gray-200 max-w-3xl font-light mb-8 leading-relaxed drop-shadow"
+         x-text="slides[currentSlide] ? slides[currentSlide].subtitulo : 'Tortas personalizadas, tartas tradicionales, alfajores de maicena y delicias recién horneadas para cada festejo.'">
+        Tortas personalizadas, tartas tradicionales, alfajores de maicena y delicias recién horneadas para cada festejo.
       </p>
 
       <!-- Pastilla con Oferta Destacada del Momento -->
-      <div class="bg-black/55 border border-amber-500/30 backdrop-blur-md px-5 py-2.5 rounded-2xl text-amber-200 text-xs sm:text-sm font-medium mb-10 inline-flex items-center gap-2">
-        <span class="text-amber-400">⚡</span>
-        <span class="text-white">Horneados del Día:</span>
-        <strong class="text-amber-300 font-bold">¡Armá tu pedido online y te lo reservamos listo para retirar o enviar!</strong>
+      <div class="bg-black/50 border border-rose-500/30 backdrop-blur-md px-5 py-2.5 rounded-2xl text-rose-200 text-xs sm:text-sm font-medium mb-10 inline-flex items-center gap-2">
+        <span class="text-accent-400">⚡</span>
+        <span class="text-white">Especialidades de Pato:</span>
+        <strong class="text-amber-300 font-bold" x-text="slides[currentSlide] ? slides[currentSlide].destacado : 'Rogel Clásico, Chocotorta, Lemon Pie y Havannet'">Rogel Clásico, Chocotorta, Lemon Pie y Havannet</strong>
       </div>
 
       <!-- Botones de Acción Inmediata (Thumb-Zone) -->
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
         <button @click="scrollTo('catalogo')" 
-                class="w-full sm:w-auto bg-amber-600 hover:bg-amber-500 text-white font-bold px-8 py-4 rounded-2xl shadow-xl shadow-amber-700/40 hover:shadow-amber-600/60 hover:scale-[1.02] active:scale-95 transition-all text-base flex items-center justify-center gap-2 font-display">
-          <span>Ver Menú Dulce y Precios</span>
+                class="w-full sm:w-auto bg-brand-600 hover:bg-brand-500 text-white font-bold px-8 py-4 rounded-2xl shadow-xl shadow-brand-600/30 hover:shadow-brand-500/50 hover:scale-[1.02] active:scale-95 transition-all text-base flex items-center justify-center gap-2 font-display">
+          <span>Ver Carta de Tortas y Delicias</span>
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
           </svg>
@@ -240,8 +265,19 @@
 
         <a href="admin.html" 
            class="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md font-semibold px-6 py-4 rounded-2xl active:scale-95 transition-all text-base flex items-center justify-center gap-2">
-          <span>⚙️ Panel de la Dueña</span>
+          <span>⚙️ Panel del Dueño</span>
         </a>
+      </div>
+
+      <!-- Controles del Slider (Dots) -->
+      <div class="flex items-center justify-center gap-2 mt-8">
+        <template x-for="(s, idx) in slides" :key="s.id">
+          <button @click="goToSlide(idx)" 
+                  class="h-2.5 rounded-full transition-all duration-300"
+                  :class="currentSlide === idx ? 'w-8 bg-rose-400 shadow-md' : 'w-2.5 bg-white/40 hover:bg-white/70'"
+                  :title="'Ir al slide ' + (idx + 1)">
+          </button>
+        </template>
       </div>
 
     </div>
@@ -249,68 +285,68 @@
   </section>
 
   <!-- ========================================================================
-       4. SECCIÓN IDENTIDAD DE BARRIO: "EL OBRADOR DE PATO EN HAEDO"
+       4. SECCIÓN IDENTIDAD: "SOBRE PASTELERÍA PATO EN HAEDO"
        ======================================================================== -->
-  <section id="el-puesto" class="py-14 bg-white border-b border-amber-100/60">
+  <section id="el-puesto" class="py-14 bg-white border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
         
-        <!-- Foto Real del Obrador y Pastelería -->
+        <!-- Foto Real del Taller / Pastelería -->
         <div class="lg:col-span-5 relative group">
-          <div class="relative overflow-hidden rounded-3xl shadow-2xl border-4 border-white bg-amber-50">
+          <div class="relative overflow-hidden rounded-3xl shadow-2xl border-4 border-white bg-gray-100">
             <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80" 
-                 alt="Obrador de Pastelería Pato en Haedo" 
+                 alt="Pastelería Artesanal Pato en Haedo" 
                  class="w-full h-80 sm:h-96 object-cover group-hover:scale-105 transition-transform duration-500">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-6">
-              <span class="text-xs font-bold uppercase tracking-wider text-amber-300 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full self-start mb-2 border border-amber-500/30">
-                Obrador Propio en Haedo
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6">
+              <span class="text-xs font-bold uppercase tracking-wider text-rose-300 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full self-start mb-2 border border-rose-500/30">
+                Elaboración Artesanal
               </span>
-              <p class="text-white text-lg font-bold font-display">Pastelería y Confitería Pato</p>
-              <p class="text-amber-200/90 text-xs">Esquina Nervo y Laínez, Haedo, Buenos Aires</p>
+              <p class="text-white text-lg font-bold font-display">Pastelería Pato</p>
+              <p class="text-gray-300 text-xs">Calle Nervo y Lainez, Haedo, Buenos Aires</p>
             </div>
           </div>
-          <!-- Badge flotante de orgullo artesanal -->
-          <div class="absolute -bottom-4 -right-4 bg-brand-700 text-white p-4 rounded-2xl shadow-xl hidden sm:flex items-center gap-3 border-2 border-white">
-            <span class="text-3xl">👩‍🍳</span>
+          <!-- Badge flotante de orgullo barrial -->
+          <div class="absolute -bottom-4 -right-4 bg-brand-600 text-white p-4 rounded-2xl shadow-xl hidden sm:flex items-center gap-3 border-2 border-white">
+            <span class="text-3xl">🎂</span>
             <div>
-              <p class="text-xs uppercase font-bold tracking-wider text-amber-200">Elaboración Propia</p>
-              <p class="text-sm font-black">Atendida por Pato</p>
+              <p class="text-xs uppercase font-bold tracking-wider text-rose-200">Horneado Diario</p>
+              <p class="text-sm font-black">Recetas Tradicionales y Caseras</p>
             </div>
           </div>
         </div>
 
-        <!-- Copywriting Cálido, Artesanal y Genuino -->
+        <!-- Copywriting Cálido y Genuino -->
         <div class="lg:col-span-7 space-y-6">
-          <div class="inline-flex items-center gap-2 text-xs font-bold text-brand-800 bg-brand-50 px-3.5 py-1.5 rounded-xl border border-brand-200">
+          <div class="inline-flex items-center gap-2 text-xs font-bold text-brand-700 bg-brand-50 px-3.5 py-1.5 rounded-xl border border-brand-200">
             <span>✨</span>
-            <span>PASTELERÍA ARTESANAL DE VERDAD</span>
+            <span>PASTELERÍA ARTESANAL DE HAEDO</span>
           </div>
           
           <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight leading-tight font-display">
-            Sabor casero y fresco, <br>
-            <span class="text-brand-600">horneado cada día por su propia dueña.</span>
+            El auténtico sabor casero, <br>
+            <span class="text-brand-600">hecho con dedicación y amor por Pato.</span>
           </h2>
 
           <p class="text-gray-600 text-base sm:text-lg leading-relaxed">
-            En <strong>Pastelería Pato</strong> no usamos premezclas industriales ni conservantes artificiales: acá batimos, horneamos y decoramos cada torta, tarta y docena de facturas con manteca pura, huevos de campo y el más rico dulce de leche repostero. Desde nuestra esquina en <strong>Nervo y Laínez</strong>, endulzamos las meriendas, cumpleaños y festejos familiares de todo Haedo.
+            En <strong>Pastelería Pato</strong> cada torta, tarta y bocado dulce se elabora con ingredientes nobles: manteca de primera, dulce de leche repostero premium, chocolate genuino y frutas seleccionadas. Atendemos a nuestros vecinos de Haedo y alrededores para endulzar cumpleaños, festejos y meriendas en familia.
           </p>
 
-          <!-- 3 Pilares de la Pastelería -->
+          <!-- 3 Pilares del Local -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-            <div class="p-4 rounded-2xl bg-[#FDFBF9] border border-amber-100 hover:border-amber-300 transition-colors">
-              <div class="text-2xl mb-2">🧈</div>
-              <h3 class="font-bold text-gray-900 text-sm mb-1">Materia Prima Premium</h3>
-              <p class="text-xs text-gray-500">Manteca de primera calidad, cacao puro y dulce de leche repostero abundante.</p>
+            <div class="p-4 rounded-2xl bg-gray-50 border border-gray-100 hover:border-brand-300 transition-colors">
+              <div class="text-2xl mb-2">⭐</div>
+              <h3 class="font-bold text-gray-900 text-sm mb-1">Materia Prima Noble</h3>
+              <p class="text-xs text-gray-500">Dulce de leche premium, chocolates reales y frutos frescos.</p>
             </div>
-            <div class="p-4 rounded-2xl bg-[#FDFBF9] border border-amber-100 hover:border-amber-300 transition-colors">
+            <div class="p-4 rounded-2xl bg-gray-50 border border-gray-100 hover:border-brand-300 transition-colors">
               <div class="text-2xl mb-2">🔥</div>
               <h3 class="font-bold text-gray-900 text-sm mb-1">Horneado Diario</h3>
-              <p class="text-xs text-gray-500">Facturas, medialunas y bizcochuelos esponjosos saliendo del horno a diario.</p>
+              <p class="text-xs text-gray-500">Elaboración constante para garantizar máxima frescura y esponjosidad.</p>
             </div>
-            <div class="p-4 rounded-2xl bg-[#FDFBF9] border border-amber-100 hover:border-amber-300 transition-colors">
-              <div class="text-2xl mb-2">🎂</div>
-              <h3 class="font-bold text-gray-900 text-sm mb-1">Tortas a Medida</h3>
-              <p class="text-xs text-gray-500">Diseños personalizados para cumples, bautismos o darte un gusto el finde.</p>
+            <div class="p-4 rounded-2xl bg-gray-50 border border-gray-100 hover:border-brand-300 transition-colors">
+              <div class="text-2xl mb-2">💬</div>
+              <h3 class="font-bold text-gray-900 text-sm mb-1">Pedidos por WhatsApp</h3>
+              <p class="text-xs text-gray-500">Armás tu pedido online y coordinamos el retiro en Nervo y Lainez.</p>
             </div>
           </div>
 
@@ -323,24 +359,24 @@
   <!-- ========================================================================
        5. CATÁLOGO DATA-DRIVEN & FILTROS REACTIVOS (Alpine.js)
        ======================================================================== -->
-  <section id="catalogo" class="py-16 sm:py-20 bg-[#FAF7F2] relative">
+  <section id="catalogo" class="py-16 sm:py-20 bg-[#FAF4F2] relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
       
       <!-- Cabecera de la Sección -->
       <div class="text-center max-w-2xl mx-auto mb-10">
-        <span class="text-xs uppercase font-bold tracking-wider text-brand-700 bg-brand-100 px-3.5 py-1.5 rounded-full border border-brand-200">
-          Catálogo Dulce Actualizado
+        <span class="text-xs uppercase font-bold tracking-wider text-brand-600 bg-brand-100 px-3.5 py-1.5 rounded-full border border-brand-200">
+          Carta de Delicias Artesanales
         </span>
         <h2 class="text-3xl sm:text-5xl font-extrabold text-gray-900 tracking-tight mt-3 mb-3 font-display">
-          Nuestras Especialidades
+          Nuestras Tortas y Tartas
         </h2>
         <p class="text-gray-600 text-sm sm:text-base">
-          Elegí entre nuestras tortas artesanales, facturas calientes, alfajores y postres. Los precios se sincronizan automáticamente con las novedades de Pato.
+          Elegí tus favoritas para cumpleaños, eventos o la merienda. Los precios y el stock se sincronizan en tiempo real.
         </p>
       </div>
 
       <!-- Barra de Búsqueda y Filtros de Categoría -->
-      <div class="bg-white p-4 sm:p-5 rounded-3xl shadow-sm border border-amber-100 mb-10 space-y-4">
+      <div class="bg-white p-4 sm:p-5 rounded-3xl shadow-sm border border-gray-200/80 mb-10 space-y-4">
         
         <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
           
@@ -353,8 +389,8 @@
             </div>
             <input type="text" 
                    x-model="searchQuery" 
-                   placeholder="Buscar chocotorta, medialunas, rogel, lemon pie, alfajores..." 
-                   class="w-full pl-10 pr-10 py-3 bg-[#FAF8F5] hover:bg-[#F5F0E8] focus:bg-white border border-amber-200/80 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all">
+                   placeholder="Buscar rogel, chocotorta, lemon pie, alfajor, budín..." 
+                   class="w-full pl-10 pr-10 py-3 bg-gray-50 hover:bg-gray-100/60 focus:bg-white border border-gray-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all">
             
             <!-- Botón limpiar búsqueda -->
             <button x-show="searchQuery.length > 0" 
@@ -379,12 +415,12 @@
             <button @click="setCategory(cat.id)"
                     class="px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-200 flex items-center gap-2 border"
                     :class="activeCategory === cat.id 
-                            ? 'bg-brand-600 text-white border-brand-600 shadow-md shadow-brand-600/20 scale-[1.02]' 
-                            : 'bg-[#FDFBF9] hover:bg-[#F7EFE6] text-gray-700 border-amber-200/60'">
+                            ? 'bg-brand-600 text-white border-brand-600 shadow-md shadow-brand-500/20 scale-[1.02]' 
+                            : 'bg-gray-50 hover:bg-gray-100 text-gray-700 border-gray-200'">
               <span x-text="cat.icono"></span>
               <span x-text="cat.nombre"></span>
               <span class="text-[11px] px-1.5 py-0.5 rounded-full font-bold"
-                    :class="activeCategory === cat.id ? 'bg-white/20 text-white' : 'bg-amber-100 text-amber-900'"
+                    :class="activeCategory === cat.id ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-600'"
                     x-text="getCategoryCount(cat.id)">
               </span>
             </button>
@@ -396,42 +432,42 @@
       <!-- ESTADO DE CARGA (Skeleton) -->
       <div x-show="isLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         <template x-for="i in 8" :key="i">
-          <div class="bg-white rounded-3xl p-4 shadow-sm border border-amber-100 animate-pulse space-y-4">
-            <div class="bg-amber-100/60 h-52 rounded-2xl w-full"></div>
-            <div class="h-4 bg-amber-100/60 rounded w-3/4"></div>
-            <div class="h-3 bg-amber-100/60 rounded w-1/2"></div>
-            <div class="h-8 bg-amber-100/60 rounded w-full"></div>
+          <div class="bg-white rounded-3xl p-4 shadow-sm border border-gray-100 animate-pulse space-y-4">
+            <div class="bg-gray-200 h-52 rounded-2xl w-full"></div>
+            <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+            <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+            <div class="h-8 bg-gray-200 rounded w-full"></div>
           </div>
         </template>
       </div>
 
-      <!-- GRID DE PRODUCTOS DATA-DRIVEN (LEÍDO DIRECTAMENTE DESDE LOCALSTORAGE) -->
+      <!-- GRID DE PRODUCTOS DATA-DRIVEN -->
       <div x-show="!isLoading && filteredProducts.length > 0" 
            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         
         <template x-for="product in filteredProducts" :key="product.id">
-          <div class="product-card bg-white rounded-3xl overflow-hidden border border-amber-100 shadow-sm flex flex-col justify-between group">
+          <div class="product-card bg-white rounded-3xl overflow-hidden border border-gray-200/80 shadow-sm flex flex-col justify-between group">
             
             <!-- Contenedor de Imagen con Badge de Estado -->
-            <div class="relative h-56 bg-amber-50 overflow-hidden">
+            <div class="relative h-56 bg-gray-100 overflow-hidden">
               <img :src="product.imagen" 
                    :alt="product.nombre" 
                    loading="lazy"
                    class="product-img w-full h-full object-cover"
                    onerror="this.src='https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80';">
               
-              <!-- Badge de Etiqueta (Especialidad, Más Pedida, etc.) -->
+              <!-- Badge de Etiqueta (Oferta, Especialidad, etc.) -->
               <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider shadow-md backdrop-blur-md"
                     :class="{
-                      'bg-accent-500 text-white': product.etiqueta && (product.etiqueta.includes('Imperdible') || product.etiqueta.includes('Más Pedida') || product.etiqueta.includes('Estrella')),
-                      'bg-brand-600 text-white': product.etiqueta && (product.etiqueta.includes('Artesanal') || product.etiqueta.includes('Recién')),
-                      'bg-gray-900/80 text-white': !product.etiqueta || (!product.etiqueta.includes('Imperdible') && !product.etiqueta.includes('Artesanal'))
+                      'bg-accent-500 text-white': product.etiqueta && (product.etiqueta.includes('Oferta') || product.etiqueta.includes('Súper') || product.etiqueta.includes('Estrella')),
+                      'bg-brand-600 text-white': product.etiqueta && (product.etiqueta.includes('Artesanal') || product.etiqueta.includes('Clásica') || product.etiqueta.includes('Casero')),
+                      'bg-gray-900/80 text-white': !product.etiqueta || (!product.etiqueta.includes('Oferta') && !product.etiqueta.includes('Artesanal'))
                     }"
-                    x-text="product.etiqueta || 'Del Obrador'">
+                    x-text="product.etiqueta || 'Horneado'">
               </span>
 
-              <!-- Badge de Unidad de Venta (unidad / docena / porción) -->
-              <span class="absolute bottom-3 right-3 bg-white/95 backdrop-blur-md text-gray-800 text-[11px] font-bold px-2.5 py-0.5 rounded-lg border border-amber-200 shadow">
+              <!-- Badge de Unidad de Venta (unidad / docena / caja) -->
+              <span class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-md text-gray-800 text-[11px] font-bold px-2.5 py-0.5 rounded-lg border border-gray-200 shadow">
                 Por <span x-text="product.unidad || 'unidad'"></span>
               </span>
             </div>
@@ -440,7 +476,7 @@
             <div class="p-5 flex-1 flex flex-col justify-between">
               <div>
                 <span class="text-[11px] font-bold uppercase tracking-wider text-brand-600 block mb-1"
-                      x-text="product.categoria === 'tortas' ? 'Torta / Tarta' : (product.categoria === 'facturas' ? 'Facturas / Panadería' : (product.categoria === 'alfajores' ? 'Alfajor Artesanal' : 'Postre Individual'))">
+                      x-text="(categories.find(c => c.id === product.categoria) || {}).nombre || product.categoria">
                 </span>
                 
                 <h3 class="text-xl font-extrabold text-gray-900 font-display leading-tight mb-2 group-hover:text-brand-600 transition-colors"
@@ -448,12 +484,12 @@
                 </h3>
 
                 <p class="text-xs text-gray-500 leading-relaxed line-clamp-2 mb-4"
-                   x-text="product.descripcion || 'Elaborada artesanalmente en el obrador de Pastelería Pato.'">
+                   x-text="product.descripcion || 'Elaborada artesanalmente con ingredientes de primera calidad.'">
                 </p>
               </div>
 
               <!-- Precio y Controles Interactivos de Carrito -->
-              <div class="pt-4 border-t border-amber-50 flex items-center justify-between gap-2">
+              <div class="pt-4 border-t border-gray-100 flex items-center justify-between gap-2">
                 <div>
                   <span class="text-[10px] text-gray-400 font-semibold uppercase block">Precio</span>
                   <div class="flex items-baseline gap-1">
@@ -474,12 +510,12 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
                     </svg>
-                    <span>Sumar</span>
+                    <span>Pedir</span>
                   </button>
 
                   <!-- Si el producto YA está en el carrito: Stepper interactivo [-] [qty] [+] -->
                   <div x-show="$store.cart.getItemQuantity(product.id) > 0"
-                       class="flex items-center bg-amber-50 border border-brand-200 rounded-2xl p-1 shadow-sm">
+                       class="flex items-center bg-rose-50 border border-brand-200 rounded-2xl p-1 shadow-sm">
                     <button @click="$store.cart.decreaseQuantity(product.id)"
                             class="w-7 h-7 rounded-xl bg-white hover:bg-brand-600 hover:text-white text-brand-800 flex items-center justify-center font-bold text-sm shadow-sm transition-colors"
                             title="Restar una unidad">
@@ -499,7 +535,7 @@
                   <a :href="getWhatsAppProductLink(product)" 
                      target="_blank"
                      rel="noopener noreferrer"
-                     class="w-9 h-9 rounded-2xl bg-[#FAF7F2] hover:bg-amber-100 text-gray-400 hover:text-amber-700 border border-amber-200/60 flex items-center justify-center transition-all active:scale-95"
+                     class="w-9 h-9 rounded-2xl bg-gray-50 hover:bg-emerald-50 text-gray-400 hover:text-emerald-600 border border-gray-200/80 flex items-center justify-center transition-all active:scale-95"
                      :title="'Consultar por ' + product.nombre + ' en WhatsApp'">
                     <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
                       <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.299.144.35.49 1.197.533 1.284.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.357.101.174.449.741.964 1.201.662.591 1.221.774 1.394.861.174.086.275.073.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.072.043.419-.101.824z"/>
@@ -518,17 +554,17 @@
 
       <!-- ESTADO VACÍO (Sin coincidencias en búsqueda) -->
       <div x-show="!isLoading && filteredProducts.length === 0" 
-           class="text-center py-16 bg-white rounded-3xl border border-amber-200 p-8 max-w-md mx-auto shadow-sm">
-        <div class="w-16 h-16 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
-          🍰
+           class="text-center py-16 bg-white rounded-3xl border border-gray-200/80 p-8 max-w-md mx-auto shadow-sm">
+        <div class="w-16 h-16 bg-rose-50 text-brand-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
+          🔍
         </div>
-        <h3 class="text-lg font-bold text-gray-900 mb-1">No encontramos esa especialidad</h3>
+        <h3 class="text-lg font-bold text-gray-900 mb-1">No encontramos esa delicia</h3>
         <p class="text-xs text-gray-500 mb-6">
-          No hay coincidencias para "<span class="font-semibold text-gray-700" x-text="searchQuery"></span>". Probá buscando por torta, factura, alfajor o postre.
+          No hay coincidencias para "<span class="font-semibold text-gray-700" x-text="searchQuery"></span>". Probá con otra torta, tarta o alfajor.
         </p>
         <button @click="clearFilters()" 
                 class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition-colors">
-          Mostrar todas las especialidades
+          Mostrar todas las delicias
         </button>
       </div>
 
@@ -536,66 +572,65 @@
   </section>
 
   <!-- ========================================================================
-       6. UBICACIÓN, HORARIOS Y CONTACTO EN HAEDO
+       6. UBICACIÓN, HORARIOS Y CONTACTO
        ======================================================================== -->
-  <section id="ubicacion" class="py-16 bg-white border-t border-amber-100">
+  <section id="ubicacion" class="py-16 bg-white border-t border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
       
-      <div class="bg-gradient-to-br from-brand-950 to-[#23120A] rounded-3xl text-white p-8 sm:p-12 shadow-2xl relative overflow-hidden">
+      <div class="bg-gradient-to-br from-brand-900 to-gray-900 rounded-3xl text-white p-8 sm:p-12 shadow-2xl relative overflow-hidden">
         
         <!-- Elementos decorativos de fondo -->
-        <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-amber-500/15 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -left-10 -top-10 w-60 h-60 bg-amber-600/10 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-10 -top-10 w-60 h-60 bg-rose-500/10 rounded-full blur-2xl pointer-events-none"></div>
 
         <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           
           <div class="lg:col-span-7 space-y-4">
-            <span class="text-xs uppercase font-bold tracking-widest text-amber-300 bg-white/10 px-3 py-1 rounded-full border border-white/10">
+            <span class="text-xs uppercase font-bold tracking-widest text-rose-300 bg-white/10 px-3 py-1 rounded-full border border-white/10">
               Vení a Conocernos
             </span>
             <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight font-display">
               Te esperamos en <br>
-              <span class="text-amber-300">Nervo y Laínez, Haedo</span>
+              <span class="text-rose-300">Nervo y Lainez</span>
             </h2>
-            <p class="text-amber-100/90 text-sm sm:text-base max-w-xl leading-relaxed">
-              En pleno corazón de <strong>Haedo, Buenos Aires</strong>. Acercate a buscar facturas recién horneadas, encargar tu torta especial para el finde o retirar tu pedido preparado con cariño.
+            <p class="text-gray-300 text-sm sm:text-base max-w-xl leading-relaxed">
+              En pleno <strong>Haedo</strong>, Buenos Aires. Acercate a retirar tus tortas recién horneadas o coordiná el pedido con entrega directa por WhatsApp.
             </p>
 
             <!-- Fichas de Info -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
               <div class="bg-white/5 border border-white/10 p-4 rounded-2xl">
-                <p class="text-xs text-amber-300/80 font-semibold mb-1">📍 Dirección Exacta</p>
-                <p class="text-sm font-bold text-white">Nervo y Laínez</p>
-                <p class="text-xs text-gray-300">Haedo, Buenos Aires, Argentina</p>
+                <p class="text-xs text-gray-400 font-semibold mb-1">📍 Dirección Exacta</p>
+                <p class="text-sm font-bold text-white">Nervo y Lainez</p>
+                <p class="text-xs text-gray-400">Haedo, Buenos Aires</p>
               </div>
 
               <div class="bg-white/5 border border-white/10 p-4 rounded-2xl">
-                <p class="text-xs text-amber-300/80 font-semibold mb-1">🕒 Horarios de Atención</p>
-                <p class="text-sm font-bold text-white">Lunes a Sábados</p>
-                <p class="text-xs text-gray-300">8:00 a 13:00 | 16:00 a 20:00 hs</p>
-                <p class="text-[11px] text-amber-300 mt-1 font-semibold">Domingos: 8:30 a 13:30 hs</p>
+                <p class="text-xs text-gray-400 font-semibold mb-1">🕒 Horarios de Atención</p>
+                <p class="text-sm font-bold text-white">Martes a Sábados: 9 a 13 | 16:30 a 20 hs</p>
+                <p class="text-xs text-gray-400">Domingos: 9:00 a 13:30 hs (Lunes cerrado)</p>
               </div>
             </div>
           </div>
 
           <!-- Tarjeta de Acción / WhatsApp -->
           <div class="lg:col-span-5 bg-white/10 border border-white/20 backdrop-blur-md p-6 sm:p-8 rounded-3xl text-center flex flex-col items-center">
-            <div class="w-14 h-14 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-3xl shadow-lg mb-4">
-              🍰
+            <div class="w-14 h-14 rounded-2xl bg-rose-600 text-white flex items-center justify-center text-3xl shadow-lg mb-4">
+              🎂
             </div>
-            <h3 class="text-xl font-bold font-display mb-2">¿Querés encargar una torta especial?</h3>
-            <p class="text-xs text-amber-100/80 mb-6 max-w-xs">
-              Escribinos directamente al WhatsApp de Pastelería Pato para consultar sabores, temáticas y disponibilidad del día.
+            <h3 class="text-xl font-bold font-display mb-2">¿Querés encargar una torta o consultar?</h3>
+            <p class="text-xs text-gray-300 mb-6 max-w-xs">
+              Escribinos directamente al WhatsApp de Pastelería Pato y coordinamos tu pedido para tu festejo o la merienda.
             </p>
-            <a :href="getWhatsAppGeneralLink('Hola Pato! Quería consultarte por tortas y especialidades del día.')"
-               href="https://wa.me/5491159665917?text=Hola%20Pato!%20Quería%20consultarte%20por%20tortas%20y%20especialidades%20del%20día." 
-               target="_blank"
+            <a :href="getWhatsAppGeneralLink('Hola Pato! Quería consultarte por las tortas y tartas del día.')"
+               href="https://wa.me/5491159665917?text=Hola%20Pato!%20Quería%20consultarte%20por%20las%20tortas%20y%20tartas%20del%20día." 
+               target="_blank" 
                rel="noopener noreferrer"
-               class="w-full bg-amber-500 hover:bg-amber-400 text-brand-950 font-bold py-3.5 px-6 rounded-2xl transition-all shadow-lg shadow-amber-500/20 active:scale-95 text-sm flex items-center justify-center gap-2">
+               class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3.5 px-6 rounded-2xl transition-all shadow-lg shadow-emerald-900/30 active:scale-95 text-sm flex items-center justify-center gap-2">
               <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
                 <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.299.144.35.49 1.197.533 1.284.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.357.101.174.449.741.964 1.201.662.591 1.221.774 1.394.861.174.086.275.073.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.072.043.419-.101.824z"/>
               </svg>
-              <span>Escribir a Pato por WhatsApp</span>
+              <span>Escribir por WhatsApp</span>
             </a>
           </div>
 
@@ -609,28 +644,28 @@
   <!-- ========================================================================
        7. FOOTER INSTITUCIONAL Y DE BARRIO
        ======================================================================== -->
-  <footer class="bg-brand-950 text-gray-400 py-10 border-t border-brand-900 text-xs">
+  <footer class="bg-gray-950 text-gray-400 py-10 border-t border-gray-900 text-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
       <div class="flex items-center gap-3">
-        <span class="text-2xl">🍰</span>
+        <span class="text-2xl">🎂</span>
         <div>
           <p class="text-white font-bold text-sm font-display">PASTELERÍA PATO</p>
-          <p class="text-amber-200/70 text-[11px]">Tortas y Especialidades Artesanales • Nervo y Laínez, Haedo, Buenos Aires</p>
+          <p class="text-gray-500 text-[11px]">Pastelería Artesanal • Calle Nervo y Lainez, Haedo, Buenos Aires</p>
         </div>
       </div>
 
       <div class="flex items-center gap-4 text-[11px]">
         <a href="admin.html" class="text-amber-400 hover:text-white font-semibold underline underline-offset-4 transition-colors">
-          ⚙️ Panel de Control de la Dueña (admin.html)
+          ⚙️ Panel de Control del Dueño (admin.html)
         </a>
         <span class="text-gray-700">|</span>
-        <span class="text-gray-400">© 2026 Pastelería Pato</span>
+        <span class="text-gray-500">© 2026 Pastelería Pato • Haedo</span>
       </div>
     </div>
   </footer>
 
   <!-- ========================================================================
-       8. DRAWER LATERAL DEL PEDIDO (Slide-Over E-Commerce)
+       8. DRAWER LATERAL DEL CARRITO (Slide-Over E-Commerce)
        ======================================================================== -->
   <div x-cloak 
        x-show="$store.cart.isOpen" 
@@ -661,26 +696,26 @@
            class="w-screen max-w-md bg-white cart-drawer-panel flex flex-col justify-between shadow-2xl">
         
         <!-- Header del Drawer -->
-        <div class="p-4 sm:p-5 bg-brand-950 text-white flex items-center justify-between border-b border-brand-900">
+        <div class="p-4 sm:p-5 bg-brand-900 text-white flex items-center justify-between border-b border-brand-800">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-amber-600 flex items-center justify-center text-xl shadow-inner">
-              🛍️
+            <div class="w-10 h-10 rounded-xl bg-brand-700/80 flex items-center justify-center text-xl shadow-inner">
+              🎂
             </div>
             <div>
               <h3 id="slide-over-title" class="font-display font-extrabold text-base text-white flex items-center gap-2">
                 <span>Tu Pedido Dulce</span>
-                <span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] uppercase px-2 py-0.5 rounded-full font-bold"
-                      x-text="$store.cart.totalCount + ($store.cart.totalCount === 1 ? ' ítem' : ' ítems')">
+                <span class="bg-rose-500/20 text-rose-200 border border-rose-500/30 text-[10px] uppercase px-2 py-0.5 rounded-full font-bold"
+                      x-text="$store.cart.totalCount + ($store.cart.totalCount === 1 ? ' item' : ' items')">
                 </span>
               </h3>
-              <p class="text-[11px] text-amber-200/80">Nervo y Laínez • Haedo, Buenos Aires</p>
+              <p class="text-[11px] text-rose-200/80">Nervo y Lainez • Haedo, Buenos Aires</p>
             </div>
           </div>
 
           <div class="flex items-center gap-2">
             <button x-show="$store.cart.items.length > 0"
-                    @click="if(confirm('¿Querés vaciar tu pedido?')) $store.cart.clearCart()"
-                    class="text-amber-300 hover:text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg hover:bg-white/10 transition-colors"
+                    @click="if(confirm('¿Querés vaciar el pedido?')) $store.cart.clearCart()"
+                    class="text-rose-200 hover:text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg hover:bg-white/10 transition-colors"
                     title="Vaciar pedido">
               Vaciar
             </button>
@@ -697,30 +732,30 @@
           
           <!-- Estado Vacío -->
           <div x-show="$store.cart.items.length === 0" class="py-14 text-center space-y-4">
-            <div class="w-20 h-20 bg-amber-50 text-amber-600 rounded-3xl flex items-center justify-center text-4xl mx-auto border border-amber-200 shadow-inner">
-              🍰
+            <div class="w-20 h-20 bg-rose-50 text-brand-600 rounded-3xl flex items-center justify-center text-4xl mx-auto border border-brand-100 shadow-inner">
+              🎂
             </div>
             <div class="space-y-1">
-              <h4 class="font-display font-bold text-lg text-gray-900">Tu canasta dulce está vacía</h4>
+              <h4 class="font-display font-bold text-lg text-gray-900">Tu pedido está vacío</h4>
               <p class="text-xs text-gray-500 max-w-xs mx-auto">
-                Sumá tortas, facturas recién horneadas y alfajores para preparar tu pedido directo a Pastelería Pato.
+                Sumá tortas artesanales, tartas, alfajores o budines para armar tu pedido a Pastelería Pato.
               </p>
             </div>
             <button @click="$store.cart.closeDrawer(); scrollTo('catalogo');"
-                    class="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold px-5 py-3 rounded-2xl shadow-lg shadow-brand-600/20 active:scale-95 transition-all">
-              <span>Explorar Especialidades del Día</span>
+                    class="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold px-5 py-3 rounded-2xl shadow-lg shadow-brand-500/20 active:scale-95 transition-all">
+              <span>Explorar Nuestras Delicias</span>
               <span>→</span>
             </button>
           </div>
 
-          <!-- Lista de Productos en el Pedido -->
+          <!-- Lista de Productos en el Changuito -->
           <div x-show="$store.cart.items.length > 0" class="space-y-3">
             <div class="flex items-center justify-between">
               <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400">Delicias Seleccionadas</h4>
               <span class="text-xs text-brand-600 font-semibold" x-text="$store.cart.uniqueCount + ' variedades'"></span>
             </div>
             
-            <div class="divide-y divide-amber-100 border border-amber-100 rounded-2xl bg-[#FAF8F5] overflow-hidden">
+            <div class="divide-y divide-gray-100 border border-gray-100 rounded-2xl bg-gray-50/50 overflow-hidden">
               <template x-for="item in $store.cart.items" :key="item.id">
                 <div class="p-3.5 bg-white flex items-center gap-3">
                   <!-- Miniatura -->
@@ -765,30 +800,31 @@
           </div>
 
           <!-- Formulario de Entrega & Cliente -->
-          <div x-show="$store.cart.items.length > 0" class="space-y-4 pt-2 border-t border-amber-100">
+          <div x-show="$store.cart.items.length > 0" class="space-y-4 pt-2 border-t border-gray-100">
             <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400">Datos para tu Pedido</h4>
             
             <!-- Modalidad: Retiro en Pastelería vs Envío a Domicilio -->
             <div>
-              <label class="block text-xs font-semibold text-gray-700 mb-1.5">¿Cómo querés recibir tu pedido?</label>
+              <label class="block text-xs font-semibold text-gray-700 mb-1.5">¿Cómo querés recibirlo?</label>
               <div class="grid grid-cols-2 gap-2">
                 <button type="button" 
                         @click="$store.cart.deliveryType = 'retiro'"
                         class="py-2.5 px-3 rounded-xl border text-xs font-bold flex flex-col items-center gap-1 transition-all"
                         :class="$store.cart.deliveryType === 'retiro' 
-                                ? 'bg-amber-50 border-brand-600 text-brand-800 shadow-sm' 
+                                ? 'bg-brand-50 border-brand-600 text-brand-800 shadow-sm' 
                                 : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'">
                   <span>🏪 Retiro en Pastelería</span>
-                  <span class="text-[10px] font-normal text-amber-700">Nervo y Laínez, Haedo</span>
+                  <span class="text-[10px] font-normal text-rose-700">Nervo y Lainez, Haedo</span>
                 </button>
                 
                 <button type="button" 
                         @click="$store.cart.deliveryType = 'delivery'"
                         class="py-2.5 px-3 rounded-xl border text-xs font-bold flex flex-col items-center gap-1 transition-all"
                         :class="$store.cart.deliveryType === 'delivery' 
-                                ? 'bg-amber-50 border-brand-600 text-brand-800 shadow-sm' 
+                                ? 'bg-brand-50 border-brand-600 text-brand-800 shadow-sm' 
                                 : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'">
                   <span>🛵 Envío a Domicilio</span>
+                  <span class="text-[10px] font-bold text-amber-800 bg-amber-100/90 px-1.5 py-0.5 rounded border border-amber-300">Horario a coordinar</span>
                   <span class="text-[10px] font-normal text-gray-500">Haedo y alrededores</span>
                 </button>
               </div>
@@ -803,7 +839,7 @@
                      type="text" 
                      x-model="$store.cart.customerName" 
                      placeholder="Ej: Laura o Martín" 
-                     class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white transition-all">
+                     class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all">
             </div>
 
             <!-- Dirección (Condicional para Delivery) -->
@@ -817,20 +853,23 @@
               <input id="cart-customer-address" 
                      type="text" 
                      x-model="$store.cart.customerAddress" 
-                     placeholder="Calle, altura, timbre o referencia en Haedo" 
-                     class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white transition-all">
-              <p class="text-[11px] text-gray-400 mt-1">El costo y horario de envío se coordina de inmediato por WhatsApp.</p>
+                     placeholder="Calle, altura, entrecalles y timbre en Haedo" 
+                     class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all">
+              <p class="text-[11px] text-amber-900 bg-amber-50 border border-amber-200/90 p-2 rounded-xl mt-1.5 flex items-center gap-1.5 font-medium">
+                <span>🕒</span>
+                <span>Los envíos se coordinan con anticipación para preservar la frescura. Costo de reparto a coordinar por WhatsApp.</span>
+              </p>
             </div>
 
             <!-- Método de Pago -->
             <div>
               <div class="flex items-center justify-between mb-1.5">
                 <label class="block text-xs font-semibold text-gray-700">Forma de Pago</label>
-                <!-- Indicador de Alias al lado del título -->
-                <span class="text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full flex items-center gap-1"
+                <!-- Indicador de Alias de Pago al lado del título -->
+                <span class="text-[10px] font-bold text-brand-700 bg-brand-50 border border-brand-200 px-2 py-0.5 rounded-full flex items-center gap-1"
                       title="Alias de pago para transferencia o Mercado Pago">
                   <span>💳</span>
-                  <span>Alias: <strong class="font-mono text-gray-900" x-text="$store.cart.paymentAlias">pato.pasteleria.mp</strong></span>
+                  <span>Alias: <strong class="font-mono text-gray-900" x-text="$store.cart.paymentAlias">pato.pasteleria</strong></span>
                 </span>
               </div>
 
@@ -855,53 +894,53 @@
                 </button>
               </div>
 
-              <!-- Bloque Destacado con Alias para Transferencia o Mercado Pago -->
+              <!-- Bloque Destacado con Alias de Pago para Transferencia o Mercado Pago -->
               <div x-show="$store.cart.paymentMethod === 'transferencia' || $store.cart.paymentMethod === 'mercadopago'" 
                    x-transition:enter="transition ease-out duration-200"
                    x-transition:enter-start="opacity-0 -translate-y-1"
                    x-transition:enter-end="opacity-100 translate-y-0"
-                   class="mt-2.5 p-3 bg-amber-50/90 border border-amber-300 rounded-2xl text-xs space-y-1.5 shadow-2xs">
+                   class="mt-2.5 p-3 bg-rose-50/90 border border-rose-200 rounded-2xl text-xs space-y-1.5 shadow-2xs">
                 
                 <div class="flex items-center justify-between">
-                  <span class="text-[11px] font-extrabold text-amber-950 uppercase tracking-wider flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                  <span class="text-[11px] font-extrabold text-brand-900 uppercase tracking-wider flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
                     <span>Alias para Transferir o Mercado Pago</span>
                   </span>
-                  <span class="text-[10px] text-amber-800 font-semibold" x-text="$store.cart.paymentHolder">Patricia (Pastelería Pato)</span>
+                  <span class="text-[10px] text-brand-700 font-semibold" x-text="$store.cart.paymentHolder">Patricia (Pastelería Pato)</span>
                 </div>
 
-                <div class="flex items-center justify-between gap-2 bg-white px-3 py-2 rounded-xl border border-amber-200 shadow-2xs">
+                <div class="flex items-center justify-between gap-2 bg-white px-3 py-2 rounded-xl border border-rose-200 shadow-2xs">
                   <div class="min-w-0">
                     <p class="text-[9px] uppercase font-bold tracking-wider text-gray-400">Alias de Pago</p>
                     <p class="font-mono font-black text-sm text-gray-900 tracking-tight select-all truncate" 
                        x-text="$store.cart.paymentAlias">
-                      pato.pasteleria.mp
+                      pato.pasteleria
                     </p>
                   </div>
                   <button type="button" 
                           @click="$store.cart.copyAlias()" 
-                          class="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 active:scale-95 text-white text-[11px] font-bold rounded-lg transition-all flex items-center gap-1 shadow-xs flex-shrink-0"
+                          class="px-3 py-1.5 bg-brand-600 hover:bg-brand-500 active:scale-95 text-white text-[11px] font-bold rounded-lg transition-all flex items-center gap-1 shadow-xs flex-shrink-0"
                           title="Copiar alias">
                     <span x-text="$store.cart.aliasCopied ? '✓ ¡Copiado!' : 'Copiar'">Copiar</span>
                   </button>
                 </div>
 
-                <p class="text-[10px] text-amber-800 leading-tight">
-                  💡 Podés transferir con este alias y adjuntar el comprobante cuando se abra WhatsApp.
+                <p class="text-[10px] text-brand-700 leading-tight">
+                  💡 Hacé la transferencia con este alias y adjuntá el comprobante al confirmar tu pedido por WhatsApp.
                 </p>
               </div>
             </div>
 
-            <!-- Notas / Aclaraciones del Pedido -->
+            <!-- Notas / Aclaraciones -->
             <div>
               <label for="cart-notes" class="block text-xs font-semibold text-gray-700 mb-1">
-                Aclaraciones para Pato (Opcional)
+                Aclaraciones para la Pastelería (Dedicatorias, Velitas, etc.)
               </label>
               <textarea id="cart-notes" 
                         x-model="$store.cart.notes" 
                         rows="2" 
-                        placeholder="Ej: Dedicatoria para la torta, velita, medialunas mitad dulce de leche y mitad pastelera..."
-                        class="w-full px-3.5 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white transition-all"></textarea>
+                        placeholder="Ej: Dedicatoria en placa de chocolate, velitas número, sin nueces..."
+                        class="w-full px-3.5 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all"></textarea>
             </div>
 
           </div>
@@ -909,18 +948,18 @@
         </div>
 
         <!-- Footer del Drawer: Totales & Botón WhatsApp -->
-        <div x-show="$store.cart.items.length > 0" class="p-4 sm:p-5 bg-[#FAF7F2] border-t border-amber-100 space-y-3">
+        <div x-show="$store.cart.items.length > 0" class="p-4 sm:p-5 bg-gray-50 border-t border-gray-200 space-y-3">
           <div class="flex items-baseline justify-between">
-            <span class="text-sm font-semibold text-gray-600">Total del Pedido</span>
+            <span class="text-sm font-semibold text-gray-600">Total Estimado</span>
             <div class="text-right">
               <span class="text-2xl font-black text-gray-950 font-display" x-text="$store.cart.formatPrice($store.cart.total)"></span>
-              <span class="block text-[10px] text-gray-400">*Elaboración fresca y artesanal</span>
+              <span class="block text-[10px] text-gray-400">*Precios para retiro o entrega en Haedo</span>
             </div>
           </div>
 
           <!-- Botón Confirmar WhatsApp 1-Click -->
           <button @click="$store.cart.sendOrder()" 
-                  class="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white font-bold py-3.5 px-5 rounded-2xl shadow-lg shadow-amber-800/30 hover:shadow-amber-600/40 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 text-sm sm:text-base">
+                  class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3.5 px-5 rounded-2xl shadow-lg shadow-emerald-700/30 hover:shadow-emerald-600/40 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 text-sm sm:text-base">
             <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
               <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.299.144.35.49 1.197.533 1.284.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.357.101.174.449.741.964 1.201.662.591 1.221.774 1.394.861.174.086.275.073.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.072.043.419-.101.824z"/>
             </svg>
@@ -928,7 +967,7 @@
           </button>
 
           <p class="text-center text-[11px] text-gray-500">
-            Se abrirá WhatsApp con el pedido detallado listo para enviar a Pato.
+            Se abrirá WhatsApp con el detalle completo listo para enviar en 1 toque.
           </p>
         </div>
 
@@ -950,18 +989,18 @@
        class="fixed bottom-5 left-1/2 -translate-x-1/2 z-40 w-[94%] max-w-md">
     
     <button @click="$store.cart.openDrawer()" 
-            class="cart-floating-btn w-full bg-brand-950/95 hover:bg-brand-950 text-white backdrop-blur-xl border border-amber-500/30 p-3.5 sm:p-4 rounded-2xl shadow-2xl shadow-brand-950/50 flex items-center justify-between gap-3 group active:scale-[0.98] transition-all">
+            class="cart-floating-btn w-full bg-brand-900/95 hover:bg-brand-900 text-white backdrop-blur-xl border border-rose-500/30 p-3.5 sm:p-4 rounded-2xl shadow-2xl shadow-brand-950/40 flex items-center justify-between gap-3 group active:scale-[0.98] transition-all">
       
       <!-- Lado izquierdo: Icono y conteo -->
       <div class="flex items-center gap-3">
-        <div class="relative w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-lg text-brand-950 shadow-md">
-          🍰
+        <div class="relative w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-lg text-white shadow-md">
+          🎂
           <span class="cart-badge-counter absolute -top-1.5 -right-1.5 bg-amber-400 text-gray-950 text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-brand-900 shadow"
                 x-text="$store.cart.totalCount">
           </span>
         </div>
         <div class="text-left">
-          <p class="text-xs text-amber-300 font-medium leading-none mb-1">Tu Pedido</p>
+          <p class="text-xs text-rose-200 font-medium leading-none mb-1">Tu Pedido</p>
           <p class="text-base font-black font-display text-white leading-none" 
              x-text="$store.cart.formatPrice($store.cart.total)">
           </p>
@@ -969,7 +1008,7 @@
       </div>
 
       <!-- Lado derecho: Botón Ver Pedido -->
-      <div class="flex items-center gap-1.5 text-xs font-bold text-white bg-amber-600 hover:bg-amber-500 px-4 py-2.5 rounded-xl shadow transition-colors">
+      <div class="flex items-center gap-1.5 text-xs font-bold text-white bg-brand-600 hover:bg-brand-500 px-4 py-2.5 rounded-xl shadow transition-colors">
         <span>Ver Pedido</span>
         <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>

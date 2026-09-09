@@ -1,7 +1,7 @@
 /**
- * 🎂 Panel de Administración - Pastelería Pato (Haedo, Buenos Aires)
+ * 🥬 Panel de Administración - Verdulería Roli (Modular SDK v10 Firestore)
  * 
- * Lógica CRUD conectada a Firebase Cloud Firestore
+ * Lógica CRUD para el dueño del puesto (Roli) conectada a Firebase Cloud Firestore
  * mediante las operaciones modulares: collection, addDoc/setDoc, updateDoc, deleteDoc y onSnapshot.
  */
 
@@ -222,7 +222,7 @@ import { productsService } from "./productsService.js";
 
       // Sincronización en tiempo real vía 'storage'
       window.addEventListener("storage", async (event) => {
-        const key = productsService.STORAGE_KEY || "pato_pasteleria_products_v1";
+        const key = productsService.STORAGE_KEY || "roli_verduleria_products_v1";
         if (event.key === key || !event.key) {
           products = await productsService.getProducts();
           updateStats();
@@ -360,7 +360,7 @@ import { productsService } from "./productsService.js";
                   ${statusLabel}
                 </span>
                 <span class="text-[10px] font-semibold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-md uppercase">
-                  ${escapeHtml(product.categoria || 'tortas')}
+                  ${escapeHtml(product.categoria || 'verduras')}
                 </span>
                 ${product.etiqueta ? `
                   <span class="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-md">
@@ -380,7 +380,7 @@ import { productsService } from "./productsService.js";
                 <!-- Botón secundario para cambiar foto -->
                 <button type="button"
                         onclick="document.getElementById('file-edit-${product.id}').click();"
-                        class="text-amber-700 hover:text-amber-800 font-semibold hover:underline flex items-center gap-1 text-[10px]">
+                        class="text-emerald-700 hover:text-emerald-800 font-semibold hover:underline flex items-center gap-1 text-[10px]">
                   <span>📷 Foto local</span>
                 </button>
               </div>
@@ -403,7 +403,7 @@ import { productsService } from "./productsService.js";
                        id="edit-price-${product.id}" 
                        value="${currentPrice}"
                        min="0"
-                       step="50"
+                       step="10"
                        class="w-full pl-6 pr-2 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm font-black text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all text-right font-display"
                        placeholder="0">
               </div>
@@ -416,11 +416,11 @@ import { productsService } from "./productsService.js";
               </label>
               <select id="edit-unit-${product.id}" 
                       class="w-full px-2 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all">
-                <option value="unidad" ${product.unidad === 'unidad' ? 'selected' : ''}>/ unidad</option>
-                <option value="docena" ${product.unidad === 'docena' ? 'selected' : ''}>/ docena</option>
-                <option value="caja" ${product.unidad === 'caja' ? 'selected' : ''}>/ caja</option>
-                <option value="bandeja" ${product.unidad === 'bandeja' ? 'selected' : ''}>/ bandeja</option>
                 <option value="kg" ${product.unidad === 'kg' ? 'selected' : ''}>/ kg</option>
+                <option value="unidad" ${product.unidad === 'unidad' ? 'selected' : ''}>/ unidad</option>
+                <option value="atado" ${product.unidad === 'atado' ? 'selected' : ''}>/ atado</option>
+                <option value="bolsa" ${product.unidad === 'bolsa' ? 'selected' : ''}>/ bolsa</option>
+                <option value="bandeja" ${product.unidad === 'bandeja' ? 'selected' : ''}>/ bandeja</option>
               </select>
             </div>
 
@@ -509,12 +509,12 @@ import { productsService } from "./productsService.js";
       const newProd = {
         id: uniqueId,
         nombre,
-        categoria: categoria || "tortas",
+        categoria: categoria || "verduras",
         precio,
-        unidad: unidad || "unidad",
+        unidad: unidad || "kg",
         imagen: finalImage,
-        descripcion: descripcion || "Delicia artesanal de Pastelería Pato.",
-        etiqueta: etiqueta || "Especialidad",
+        descripcion: descripcion || "Producto fresco del puesto de Tefy.",
+        etiqueta: etiqueta || "Del Día",
         disponible: estado === "disponible",
         destacado: true,
         updatedAt: new Date().toISOString()
@@ -750,8 +750,8 @@ import { productsService } from "./productsService.js";
   async function handleResetDefaults() {
     const isCloud = isFirebaseConfigured();
     const promptMsg = isCloud
-      ? "¿Deseás subir y restablecer todo el catálogo inicial de tortas y delicias a Cloud Firestore?"
-      : "¿Deseás restablecer el catálogo de Pastelería Pato a los valores originales?";
+      ? "¿Deseás subir y restablecer todo el catálogo inicial de frutas y verduras a Cloud Firestore?"
+      : "¿Deseás restablecer el catálogo de frutas y verduras a los valores originales?";
 
     if (!confirm(promptMsg)) return;
 
@@ -782,7 +782,7 @@ import { productsService } from "./productsService.js";
       const a = document.createElement("a");
       const dateStr = new Date().toISOString().slice(0, 10);
       a.href = url;
-      a.download = `pasteleria-pato-catalogo-${dateStr}.json`;
+      a.download = `verduleria-roli-catalogo-${dateStr}.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -943,16 +943,12 @@ import { productsService } from "./productsService.js";
    */
   function getPresetImageForCategory(cat) {
     switch (cat) {
-      case "tortas":
-        return "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=400&q=80";
-      case "tartas":
-        return "https://images.unsplash.com/photo-1519869325930-281384150729?auto=format&fit=crop&w=400&q=80";
-      case "alfajores":
-        return "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=400&q=80";
-      case "budines":
-        return "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=400&q=80";
+      case "frutas":
+        return "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=400&q=80";
+      case "citricos":
+        return "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=400&q=80";
       default:
-        return "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=400&q=80";
+        return "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=400&q=80";
     }
   }
 

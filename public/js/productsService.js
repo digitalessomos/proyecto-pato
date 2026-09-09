@@ -25,7 +25,7 @@ import {
 import { INITIAL_PRODUCTS, CATEGORIES } from "../data/products.js";
 import { STORE_CONFIG } from "../data/config.js";
 
-const STORAGE_KEY = "pato_pasteleria_products_v1";
+const STORAGE_KEY = "roli_verduleria_products_v1";
 
 /**
  * Obtiene la lista base por defecto desde data/products.js
@@ -118,13 +118,13 @@ export const productsService = {
     const newProduct = {
       id: uniqueId,
       nombre: product.nombre.trim(),
-      categoria: product.categoria || "tortas",
+      categoria: product.categoria || "verduras",
       precio: Math.max(0, Math.round(Number(product.precio) || 0)),
-      unidad: product.unidad || "unidad",
-      imagen: product.imagen || "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80",
-      descripcion: (product.descripcion || "").trim() || "Elaboración artesanal fresca en Pastelería Pato.",
+      unidad: product.unidad || "kg",
+      imagen: product.imagen || "https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=600&q=80",
+      descripcion: (product.descripcion || "").trim() || "Fresco y seleccionado del puesto de Tefy.",
       destacado: Boolean(product.destacado),
-      etiqueta: (product.etiqueta || "Especialidad").trim(),
+      etiqueta: (product.etiqueta || "Del Día").trim(),
       disponible: product.disponible !== false && product.disponible !== "agotado",
       updatedAt: new Date().toISOString()
     };
@@ -286,11 +286,10 @@ export const productsService = {
       return CATEGORIES;
     }
     return [
-      { id: "todos", nombre: "Todo el Menú", icono: "🧁" },
-      { id: "tortas", nombre: "Tortas y Cakes", icono: "🎂" },
-      { id: "tartas", nombre: "Tartas Dulces", icono: "🥧" },
-      { id: "alfajores", nombre: "Alfajores y Masas", icono: "🍪" },
-      { id: "budines", nombre: "Budines y Meriendas", icono: "🥐" }
+      { id: "todos", nombre: "Todo el Puesto", icono: "🧺" },
+      { id: "verduras", nombre: "Verduras y Huerta", icono: "🥬" },
+      { id: "frutas", nombre: "Frutas Dulces", icono: "🍎" },
+      { id: "citricos", nombre: "Cítricos y Jugo", icono: "🍊" }
     ];
   },
 
@@ -301,11 +300,11 @@ export const productsService = {
     const info = (typeof window !== "undefined" && (window.STORE_CONFIG || window.storeInfo)) 
       ? (window.STORE_CONFIG || window.storeInfo) 
       : (STORE_CONFIG || {
-          nombre: "Pastelería Pato",
-          dueno: "Pato",
+          nombre: "Verdulería Tefy",
+          dueno: "Tefy",
           telefonoWhatsApp: "5491159665917",
-          direccion: "Nervo y Lainez",
-          localidad: "Haedo, Buenos Aires"
+          direccion: "Guido Spano y Carrasco",
+          localidad: "Villa Luzuriaga, Buenos Aires"
         });
     return Promise.resolve(info);
   }

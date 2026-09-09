@@ -1,0 +1,9 @@
+# Configuración de Despliegue en Netlify para Verdulería Tefy
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[[redirects]]
+  from = "/admin"
+  to = "/admin.html"
+  status = 200

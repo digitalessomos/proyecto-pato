@@ -1,9 +1,9 @@
 /**
- * Lógica Principal de la Tienda - Pastelería Pato (Alpine.js)
+ * Lógica Principal de la Tienda - Verdulería Tefy (Alpine.js)
  * Sincronización en Tiempo Real con Firebase Cloud Firestore (Modular SDK v10)
  * 
  * Utiliza `onSnapshot` sobre la colección "productos" para reflejar cambios de stock,
- * precios y nuevas delicias al instante en la pantalla de los clientes sin recargar la página.
+ * precios y nuevas ofertas al instante en la pantalla de los clientes sin recargar la página.
  */
 
 import Alpine from "https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/module.esm.js";
@@ -50,27 +50,27 @@ alpineInstance.data("verduleriaApp", () => ({
     slides: [
       {
         id: 1,
-        imagen: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1200&q=80",
-        titulo: "Pastelería Artesanal con Amor",
-        subtitulo: "Tortas caseras, tartas dulces y bocados para celebrar cada momento especial.",
-        destacado: "Rogel Clásico, Chocotorta y Marquise con Frutos Rojos",
-        badge: "🎂 Horneado del Día"
+        imagen: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80",
+        titulo: "Frutas y Verduras del Día",
+        subtitulo: "De la huerta directo a tu mesa, con la calidad y frescura de siempre.",
+        destacado: "Manzanas, Bananas y Cítricos Seleccionados",
+        badge: "🍎 Directo del Mercado"
       },
       {
         id: 2,
-        imagen: "https://images.unsplash.com/photo-1519869325930-281384150729?auto=format&fit=crop&w=1200&q=80",
-        titulo: "El Auténtico Sabor Casero en Haedo",
-        subtitulo: "Ingredientes de primera calidad, recetas familiares y dulzura sin conservantes.",
-        destacado: "Lemon Pie, Tarta Havannet y Ricota Tradicional",
-        badge: "✨ Calidad Artesanal"
+        imagen: "https://images.unsplash.com/photo-1573246123716-6b1782bfc499?auto=format&fit=crop&w=1200&q=80",
+        titulo: "El Mejor Precio de Villa Luzuriaga",
+        subtitulo: "Cuidamos el bolsillo de nuestros vecinos con ofertas diarias insuperables.",
+        destacado: "Papas, Tomates y Verduras Esenciales",
+        badge: "🥬 Precios Transparentes"
       },
       {
         id: 3,
-        imagen: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=1200&q=80",
-        titulo: "Tu Pastelería en Nervo y Lainez",
-        subtitulo: "Hacé tu pedido directo por WhatsApp con retiro en el local o delivery coordinado.",
-        destacado: "Alfajores de Maicena, Medialunas y Budines Húmedos",
-        badge: "📍 Nervo y Lainez, Haedo"
+        imagen: "https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=1200&q=80",
+        titulo: "Tu Puesto Amigo en Guido Spano y Carrasco",
+        subtitulo: "Atención cálida, pesaje justo a la vista y variedad completa para tu hogar.",
+        destacado: "Mandarinas a $1.300/kg y Limones a $2.000/kg",
+        badge: "📍 En el Corazón del Barrio"
       }
     ],
 
@@ -129,14 +129,14 @@ alpineInstance.data("verduleriaApp", () => ({
                 // Notificación toast de actualización en vivo si el cliente ya estaba navegando
                 if (this.hasLoadedOnce && typeof window.Toastify === "function") {
                   window.Toastify({
-                    text: "⚡ Menú y delicias actualizadas en vivo desde Firestore",
+                    text: "⚡ Precios y catálogo actualizados en vivo desde Firestore",
                     duration: 2500,
                     gravity: "bottom",
                     position: "left",
                     style: {
-                      background: "linear-gradient(135deg, #D97706 0%, #B45309 100%)",
+                      background: "linear-gradient(135deg, #059669 0%, #047857 100%)",
                       borderRadius: "14px",
-                      boxShadow: "0 10px 25px -5px rgba(217, 119, 6, 0.4)",
+                      boxShadow: "0 10px 25px -5px rgba(5, 150, 105, 0.4)",
                       fontSize: "12px",
                       fontWeight: "600",
                       color: "#FFFFFF"
@@ -188,7 +188,7 @@ alpineInstance.data("verduleriaApp", () => ({
 
       // Escuchar eventos locales entre pestañas
       window.addEventListener("storage", async (event) => {
-        const storageKey = productsService.STORAGE_KEY || "pato_pasteleria_products_v1";
+        const storageKey = productsService.STORAGE_KEY || "roli_verduleria_products_v1";
         if (event.key === storageKey || !event.key) {
           const fresh = await productsService.getProducts();
           this.products = fresh;
@@ -292,8 +292,8 @@ alpineInstance.data("verduleriaApp", () => ({
       const storeName = (window.STORE_CONFIG && (window.STORE_CONFIG.dueno || window.STORE_CONFIG.nombre)) || 
                         this.store.dueno || 
                         this.store.nombre || 
-                        "Pato";
-      const message = `Hola ${storeName}! Vi en la web "${product.nombre}" (${this.formatPrice(product.precio)} / ${product.unidad}) de Pastelería Pato y quería consultar disponibilidad para hacer un pedido.`;
+                        "Tefy";
+      const message = `Hola ${storeName}! Vi en la web el producto "${product.nombre}" (${this.formatPrice(product.precio)} / ${product.unidad}) y quería consultar disponibilidad.`;
       return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
     },
 
@@ -305,8 +305,8 @@ alpineInstance.data("verduleriaApp", () => ({
       const storeName = (window.STORE_CONFIG && (window.STORE_CONFIG.dueno || window.STORE_CONFIG.nombre)) || 
                         this.store.dueno || 
                         this.store.nombre || 
-                        "Pato";
-      const message = customMessage || `Hola ${storeName}! Te escribo desde la tienda online de Pastelería Pato en Haedo para hacerte una consulta.`;
+                        "Tefy";
+      const message = customMessage || `Hola ${storeName}! Te escribo desde la página web para hacerte una consulta.`;
       return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
     }
   }));

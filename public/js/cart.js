@@ -1,5 +1,6 @@
 /**
- * Carrito de Compras Reactivo - Pastelería Pato (Haedo, Buenos Aires)
+ * Carrito de Compras Reactivo - Verdulería Tefy (Villa Luzuriaga)
+ * GastroWeb Studio 360 - Arquitectura Desacoplada Data-Driven
  * 
  * Gestiona el estado reactivo global del carrito mediante Alpine.store('cart'),
  * persistencia en localStorage, notificaciones Toastify y despacho a WhatsApp.
@@ -19,7 +20,7 @@ export function setupCartStore(AlpineInstance) {
     // Estado del Carrito
     items: [],
     isOpen: false,
-    storageKey: "pato_pasteleria_cart_v1",
+    storageKey: "roli_verduleria_cart_v1",
 
     // Datos del Cliente y Checkout
     customerName: "",
@@ -32,12 +33,12 @@ export function setupCartStore(AlpineInstance) {
     // Alias y titular de pago (editable desde STORE_CONFIG en data/config.js)
     get paymentAlias() {
       const config = (typeof window !== "undefined" && (window.STORE_CONFIG || window.storeInfo)) || {};
-      return config.aliasPago || "Pato.pasteleria.haedo";
+      return config.aliasPago || "Tefy.verduleria2026";
     },
 
     get paymentHolder() {
       const config = (typeof window !== "undefined" && (window.STORE_CONFIG || window.storeInfo)) || {};
-      return config.titularPago || "Pato (Pastelería Pato)";
+      return config.titularPago || "Tefy (Verdulería Tefy)";
     },
 
     // Copiar alias al portapapeles con feedback instantáneo
@@ -122,7 +123,7 @@ export function setupCartStore(AlpineInstance) {
           id: product.id,
           nombre: product.nombre,
           precio: Number(product.precio) || 0,
-          unidad: product.unidad || "unidad",
+          unidad: product.unidad || "kg",
           imagen: product.imagen || "",
           categoria: product.categoria || "",
           cantidad: qty
@@ -170,7 +171,7 @@ export function setupCartStore(AlpineInstance) {
         this.saveToStorage();
         if (window.Toastify) {
           Toastify({
-            text: `🗑️ ${removed.nombre} eliminado del carrito`,
+            text: `🗑️ ${removed.nombre} eliminado del changuito`,
             duration: 2500,
             gravity: "bottom",
             position: "right",
@@ -243,15 +244,15 @@ export function setupCartStore(AlpineInstance) {
       if (window.Toastify) {
         const unitText = qty === 1 ? product.unidad : `${qty} ${product.unidad}`;
         Toastify({
-          text: `🧁 ¡Sumaste ${product.nombre} (${unitText})!`,
+          text: `🥬 ¡Sumaste ${product.nombre} (${unitText})!`,
           duration: 2800,
           gravity: "bottom",
           position: "right",
           stopOnFocus: true,
           style: {
-            background: "linear-gradient(135deg, #D97706 0%, #B45309 100%)",
+            background: "linear-gradient(135deg, #059669 0%, #047857 100%)",
             borderRadius: "16px",
-            boxShadow: "0 12px 28px -6px rgba(217, 119, 6, 0.4)",
+            boxShadow: "0 12px 28px -6px rgba(5, 150, 105, 0.4)",
             fontSize: "13px",
             fontWeight: "700",
             color: "#FFFFFF",
@@ -267,16 +268,16 @@ export function setupCartStore(AlpineInstance) {
 
       const config = (typeof window !== "undefined" && (window.STORE_CONFIG || window.storeInfo)) || {};
       const storePhone = config.telefonoWhatsApp || "5491159665917";
-      const storeName = (config.nombre || "PASTELERÍA PATO").toUpperCase();
+      const storeName = (config.nombre || "VERDULERÍA TEFY").toUpperCase();
       const storeAddress = (config.direccion && config.localidad) 
         ? `${config.direccion}, ${config.localidad}` 
-        : (config.direccion || "Nervo y Lainez, Haedo, Buenos Aires");
-      const storeSpot = config.direccion || "Nervo y Lainez";
+        : (config.direccion || "Guido Spano y Carrasco, Villa Luzuriaga");
+      const storeSpot = config.direccion || "Guido Spano y Carrasco";
 
-      const cliente = this.customerName.trim() || "Cliente Dulce";
+      const cliente = this.customerName.trim() || "Vecino del Barrio";
       const modalidad = this.deliveryType === "delivery" 
-        ? "🛵 Envío a Domicilio (Haedo y zonas aledañas)" 
-        : `🏪 Retiro en el Local (${storeSpot})`;
+        ? "🛵 Envío a Domicilio (Reparto: 16:00hs a 19:00hs)" 
+        : `🏪 Retiro en el Puesto (${storeSpot})`;
       
       const direccionTexto = this.deliveryType === "delivery" 
         ? (this.customerAddress.trim() || "A coordinar por chat") 
@@ -300,7 +301,7 @@ export function setupCartStore(AlpineInstance) {
 
       // Construcción del ticket estructurado
       const mensaje = [
-        `🧁 *¡NUEVO PEDIDO - ${storeName}!*`,
+        `🥬 *¡NUEVO PEDIDO - ${storeName}!*`,
         `--------------------------------`,
         `👤 *Cliente:* ${cliente}`,
         `📍 *Modalidad:* ${modalidad}`,
@@ -312,9 +313,9 @@ export function setupCartStore(AlpineInstance) {
         `--------------------------------`,
         `💰 *TOTAL ESTIMADO:* ${this.formatPrice(this.total)}`,
         `--------------------------------`,
-        `📝 *Notas / Dedicatoria:* ${notasTexto}`,
-        `📍 *Ubicación:* ${storeAddress}`,
-        `\n_¡Muchas gracias por elegir Pastelería Pato en Haedo!_`
+        `📝 *Notas / Aclaraciones:* ${notasTexto}`,
+        `📍 *Puesto:* ${storeAddress}`,
+        `\n_¡Muchas gracias por elegir la verdulería del barrio!_`
       ].filter(Boolean).join("\n");
 
       return `https://wa.me/${storePhone}?text=${encodeURIComponent(mensaje)}`;
@@ -323,7 +324,7 @@ export function setupCartStore(AlpineInstance) {
     // Enviar pedido: dispara animación y abre WhatsApp
     sendOrder() {
       if (this.items.length === 0) {
-        alert("El carrito está vacío. Elegí tus delicias antes de confirmar.");
+        alert("El changuito está vacío. Elegí tus frutas y verduras antes de confirmar.");
         return;
       }
 
@@ -335,7 +336,7 @@ export function setupCartStore(AlpineInstance) {
       }
 
       if (this.deliveryType === "delivery" && !this.customerAddress.trim()) {
-        alert("Por favor, ingresá tu dirección para coordinar el envío en Haedo o alrededores.");
+        alert("Por favor, ingresá tu dirección para coordinar el envío en Villa Luzuriaga.");
         const input = document.getElementById("cart-customer-address");
         if (input) input.focus();
         return;
@@ -348,7 +349,7 @@ export function setupCartStore(AlpineInstance) {
             particleCount: 80,
             spread: 70,
             origin: { y: 0.6 },
-            colors: ['#F59E0B', '#EC4899', '#8B5CF6', '#F43F5E', '#FBBF24']
+            colors: ['#10B981', '#F59E0B', '#047857', '#34D399', '#FBBF24']
           });
         } catch (e) {
           console.log("Confetti anim:", e);
