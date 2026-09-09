@@ -1,0 +1,6 @@
+{
+  "name": "Pastelería Pato",
+  "description": "Tienda online y panel de administración para Pastelería Pato en Nervo y Laínez, Haedo, Buenos Aires. Tortas artesanales, facturas, masas finas y pedidos por WhatsApp con sincronización en tiempo real.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Control | Pastelería Pato</title>
+  <meta name="description" content="Panel exclusivo para la dueña de la pastelería. Administrá precios de tortas, facturas, unidades, disponibilidad y productos con sincronización en tiempo real.">
+  
+  <!-- Favicon temático de pastelería -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍰</text></svg>">
+
+  <!-- Tailwind CSS CDN con la paleta de pastelería artesanal -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#FDF8F3',
+              100: '#FBE8D8',
+              200: '#F7D0B2',
+              300: '#F0B185',
+              400: '#E58A54',
+              500: '#D97706',
+              600: '#B45309',
+              700: '#92400E',
+              800: '#78350F',
+              900: '#451A03',
+              950: '#2E1002',
+            },
+            accent: {
+              400: '#FB7185',
+              500: '#E11D48',
+              600: '#BE123C',
+            },
+            darkhero: '#170C06'
+          },
+          fontFamily: {
+            display: ['Outfit', 'sans-serif'],
+            heading: ['Plus Jakarta Sans', 'sans-serif'],
+            body: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Toastify vía CDN para notificaciones consistentes -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+  <!-- Estilos del Proyecto -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="bg-[#FAF7F2] text-gray-800 antialiased font-body min-h-screen flex flex-col">
+
+  <!-- ========================================================================
+       1. TOPBAR DE ESTADO & ENLACE A LA TIENDA
+       ======================================================================== -->
+  <div class="bg-brand-950 text-brand-100 text-xs py-2 px-4 border-b border-brand-900">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
+      <div class="flex items-center gap-2 font-medium">
+        <span class="inline-flex items-center justify-center w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+        <span class="text-white font-bold">Panel de Administración Exclusivo para Pato</span>
+        <span class="hidden sm:inline text-white/40">•</span>
+        <span class="text-amber-300 text-[11px]">Nervo y Laínez, Haedo, Buenos Aires</span>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <a href="index.html" 
+           target="_blank" 
+           class="inline-flex items-center gap-1.5 bg-amber-600/70 hover:bg-amber-600 text-white font-semibold px-3 py-1 rounded-lg transition-colors text-[11px] shadow-xs">
+          <span>Abrir Tienda Pública en Otra Pestaña</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       2. HEADER DEL PANEL (Reutiliza Glassmorphism y Paleta de Marca)
+       ======================================================================== -->
+  <header class="glass-nav sticky top-0 z-30 py-3.5 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center text-2xl shadow-lg shadow-amber-600/30">
+          🍰
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl sm:text-2xl font-black text-white tracking-tight font-display">PASTELERÍA PATO</h1>
+            <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-amber-400 text-gray-950 font-display">ADMIN</span>
+          </div>
+          <p class="text-[11px] text-amber-200/90 font-medium">Gestión de Precios, Especialidades y Disponibilidad del Obrador</p>
+        </div>
+      </div>
+
+      <!-- Navegación hacia Tienda -->
+      <div class="flex items-center gap-2">
+        <a href="index.html" 
+           class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs sm:text-sm font-semibold py-2 px-3 sm:px-4 rounded-xl backdrop-blur-md active:scale-95 transition-all">
+          <span>← Volver a la Tienda</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       3. CONTENIDO PRINCIPAL
+       ======================================================================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-8">
+
+    <!-- Tarjetas de Métricas Resumen -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="bg-white p-5 rounded-2xl border border-amber-100 shadow-xs flex items-center justify-between">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Total en Catálogo</p>
+          <h3 id="stat-total-products" class="text-3xl font-black text-gray-900 font-display mt-1">0</h3>
+          <p class="text-[11px] text-gray-500 mt-0.5">Tortas, facturas, alfajores y postres</p>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-2xl">
+          🍰
+        </div>
+      </div>
+
+      <div class="bg-white p-5 rounded-2xl border border-emerald-200/80 shadow-xs flex items-center justify-between">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-wider text-emerald-600">Disponibles en Obrador</p>
+          <h3 id="stat-available-products" class="text-3xl font-black text-emerald-700 font-display mt-1">0</h3>
+          <p class="text-[11px] text-emerald-600/80 mt-0.5">Visibles para los clientes en Haedo</p>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl">
+          🟢
+        </div>
+      </div>
+
+      <div class="bg-white p-5 rounded-2xl border border-red-200/80 shadow-xs flex items-center justify-between">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-wider text-amber-700">Agotados / Pausados</p>
+          <h3 id="stat-out-of-stock-products" class="text-3xl font-black text-amber-800 font-display mt-1">0</h3>
+          <p class="text-[11px] text-amber-700/80 mt-0.5">Pausados temporalmente</p>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-2xl">
+          🔴
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         SECCIÓN A: AGREGAR UN NUEVO PRODUCTO / ESPECIALIDAD
+         ==================================================================== -->
+    <section class="bg-white rounded-3xl p-6 sm:p-8 border border-amber-100 shadow-sm">
+      <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
+        <div class="w-10 h-10 rounded-xl bg-brand-600 text-white flex items-center justify-center text-xl shadow-md">
+          ➕
+        </div>
+        <div>
+          <h2 class="text-xl font-extrabold text-gray-900 font-display">Agregar Nueva Especialidad</h2>
+          <p class="text-xs text-gray-500">Cargá una nueva torta, docena de facturas, alfajores o postre para que aparezca al instante en el menú.</p>
+        </div>
+      </div>
+
+      <form id="form-add-product" class="space-y-5">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
+          
+          <!-- Vista Previa de la Imagen (Columna Izquierda en desktop) -->
+          <div class="md:col-span-3 flex flex-col items-center justify-center p-4 bg-[#FAF7F2] rounded-2xl border border-dashed border-amber-300/80 text-center">
+            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">Vista Previa</span>
+            <div class="w-32 h-32 rounded-2xl overflow-hidden bg-white shadow-sm border border-amber-200 mb-2 relative group">
+              <img id="new-product-preview" 
+                   src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=400&q=80" 
+                   alt="Vista previa de delicia" 
+                   class="w-full h-full object-cover">
+              
+              <!-- Overlay para subir foto haciendo clic en la imagen -->
+              <label for="new-product-file" 
+                     class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white cursor-pointer text-[10px] font-bold p-1 text-center backdrop-blur-2xs">
+                <span class="text-xl mb-0.5">📁</span>
+                <span>Elegir Foto</span>
+              </label>
+            </div>
+
+            <!-- Botón directo para subir desde celular o computadora -->
+            <label for="new-product-file" 
+                   class="w-full bg-brand-50 hover:bg-brand-100 text-brand-700 hover:text-brand-800 border border-brand-300 font-bold text-xs py-2 px-3 rounded-xl cursor-pointer transition-colors flex items-center justify-center gap-1.5 shadow-2xs">
+              <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+              <span>Subir Foto Local</span>
+            </label>
+            <input type="file" id="new-product-file" accept="image/*" class="hidden">
+            
+            <p id="new-product-file-status" class="text-[10px] text-gray-400 mt-1.5 truncate max-w-[170px]">
+              O pegá una URL a la derecha
+            </p>
+          </div>
+
+          <!-- Campos del Formulario (Columna Derecha) -->
+          <div class="md:col-span-9 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            
+            <!-- Nombre del Producto -->
+            <div class="sm:col-span-2">
+              <label for="new-product-nombre" class="block text-xs font-bold text-gray-700 mb-1">
+                Nombre de la Especialidad <span class="text-red-500">*</span>
+              </label>
+              <input id="new-product-nombre" 
+                     type="text" 
+                     required 
+                     placeholder="Ej: Torta Balcarce Especial, Medialunas de Manteca..."
+                     class="w-full px-3.5 py-2.5 bg-gray-50 hover:bg-gray-100/60 focus:bg-white border border-gray-300 rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all">
+            </div>
+
+            <!-- Categoría -->
+            <div>
+              <label for="new-product-categoria" class="block text-xs font-bold text-gray-700 mb-1">
+                Categoría <span class="text-red-500">*</span>
+              </label>
+              <select id="new-product-categoria" 
+                      required
+                      class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white">
+                <option value="tortas">🎂 Tortas y Tartas</option>
+                <option value="facturas">🥐 Facturas y Panadería</option>
+                <option value="alfajores">🍪 Alfajores</option>
+                <option value="postres">🍮 Postres Individuales</option>
+              </select>
+            </div>
+
+            <!-- Precio ($ ARS) -->
+            <div>
+              <label for="new-product-precio" class="block text-xs font-bold text-gray-700 mb-1">
+                Precio ($ ARS) <span class="text-red-500">*</span>
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-gray-500 font-bold text-sm pointer-events-none">$</span>
+                <input id="new-product-precio" 
+                       type="number" 
+                       required 
+                       min="0" 
+                       step="100"
+                       placeholder="Ej: 3500"
+                       class="w-full pl-8 pr-3.5 py-2.5 bg-gray-50 focus:bg-white border border-gray-300 rounded-xl text-xs sm:text-sm font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all">
+              </div>
+            </div>
+
+            <!-- Unidad de Medida -->
+            <div>
+              <label for="new-product-unidad" class="block text-xs font-bold text-gray-700 mb-1">
+                Unidad de Venta <span class="text-red-500">*</span>
+              </label>
+              <select id="new-product-unidad" 
+                      required
+                      class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white">
+                <option value="unidad">unidad</option>
+                <option value="porción">porción</option>
+                <option value="docena">docena</option>
+                <option value="media docena">media docena</option>
+                <option value="kg">kg (Kilo)</option>
+                <option value="caja">caja</option>
+              </select>
+            </div>
+
+            <!-- Estado Inicial -->
+            <div>
+              <label for="new-product-estado" class="block text-xs font-bold text-gray-700 mb-1">
+                Estado Inicial <span class="text-red-500">*</span>
+              </label>
+              <select id="new-product-estado" 
+                      required
+                      class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white">
+                <option value="disponible">🟢 Disponible en Obrador</option>
+                <option value="agotado">🔴 Agotado / Oculto</option>
+              </select>
+            </div>
+
+            <!-- URL de la Imagen -->
+            <div class="sm:col-span-2">
+              <label for="new-product-imagen" class="block text-xs font-bold text-gray-700 mb-1">
+                URL de Imagen Web (Opcional si subiste foto local)
+              </label>
+              <input id="new-product-imagen" 
+                     type="text" 
+                     placeholder="https://images.unsplash.com/... (o dejá vacío tras subir archivo)"
+                     class="w-full px-3.5 py-2.5 bg-gray-50 focus:bg-white border border-gray-300 rounded-xl text-xs font-normal focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all">
+              <p class="text-[10px] text-gray-400 mt-1">Podés subir una foto desde tu celular o computadora a la izquierda o ingresar una URL acá.</p>
+            </div>
+
+            <!-- Etiqueta / Badge Promocional -->
+            <div>
+              <label for="new-product-etiqueta" class="block text-xs font-bold text-gray-700 mb-1">
+                Etiqueta Promocional
+              </label>
+              <input id="new-product-etiqueta" 
+                     type="text" 
+                     placeholder="Ej: Especialidad de Pato, Recién Horneadas, Más Pedida..."
+                     class="w-full px-3.5 py-2.5 bg-gray-50 focus:bg-white border border-gray-300 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all">
+            </div>
+
+            <!-- Descripción Breve -->
+            <div class="sm:col-span-3">
+              <label for="new-product-descripcion" class="block text-xs font-bold text-gray-700 mb-1">
+                Descripción Corta
+              </label>
+              <input id="new-product-descripcion" 
+                     type="text" 
+                     placeholder="Ej: Masa casera hojaldrada con dulce de leche repostero abundante y merengue italiano."
+                     class="w-full px-3.5 py-2 bg-gray-50 focus:bg-white border border-gray-300 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all">
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Botón de Envío -->
+        <div class="pt-4 border-t border-gray-100 flex items-center justify-end gap-3">
+          <button type="submit" 
+                  class="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-500 text-white font-bold py-3 px-6 rounded-2xl shadow-md shadow-brand-600/20 active:scale-95 transition-all text-sm font-display">
+            <span>➕</span>
+            <span>Guardar Especialidad en el Catálogo</span>
+          </button>
+        </div>
+      </form>
+    </section>
+
+
+    <!-- ====================================================================
+         SECCIÓN B: LISTA Y EDICIÓN EN TIEMPO REAL DEL CATÁLOGO
+         ==================================================================== -->
+    <section id="seccion-catalogo" class="space-y-4">
+      
+      <!-- Barra de Filtros, Búsqueda y Herramientas -->
+      <div class="bg-white p-4 sm:p-5 rounded-3xl border border-amber-100 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+        
+        <!-- Buscador -->
+        <div class="relative flex-1">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </div>
+          <input id="admin-search-filter" 
+                 type="text" 
+                 placeholder="Filtrar por nombre o descripción..." 
+                 class="w-full pl-10 pr-4 py-2.5 bg-gray-50 focus:bg-white border border-gray-300 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all">
+        </div>
+
+        <!-- Selectores de Categoría y Estado -->
+        <div class="flex flex-wrap items-center gap-2.5">
+          <select id="admin-category-filter" 
+                  class="py-2.5 px-3 bg-gray-50 border border-gray-300 rounded-xl text-xs font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500">
+            <option value="todos">🍰 Todas las especialidades</option>
+            <option value="tortas">🎂 Tortas y Tartas</option>
+            <option value="facturas">🥐 Facturas</option>
+            <option value="alfajores">🍪 Alfajores</option>
+            <option value="postres">🍮 Postres</option>
+          </select>
+
+          <select id="admin-status-filter" 
+                  class="py-2.5 px-3 bg-gray-50 border border-gray-300 rounded-xl text-xs font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500">
+            <option value="todos">Todos los estados</option>
+            <option value="disponible">🟢 Solo Disponibles</option>
+            <option value="agotado">🔴 Solo Agotados</option>
+          </select>
+        </div>
+
+        <!-- Botones de Acción de Copias de Seguridad y Restablecer -->
+        <div class="flex items-center gap-2 pt-2 md:pt-0 border-t md:border-t-0 border-gray-100">
+          
+          <button id="btn-reset-defaults" 
+                  type="button" 
+                  class="text-[11px] font-bold text-gray-600 hover:text-brand-700 bg-gray-100 hover:bg-brand-50 px-3 py-2 rounded-xl transition-colors"
+                  title="Restablecer al catálogo original de Pastelería Pato">
+            🔄 Valores de Fábrica
+          </button>
+
+          <button id="btn-export-json" 
+                  type="button" 
+                  class="text-[11px] font-bold text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-xl transition-colors"
+                  title="Descargar copia de seguridad en archivo JSON">
+            ⬇️ Backup JSON
+          </button>
+
+          <label class="text-[11px] font-bold text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-xl transition-colors cursor-pointer"
+                 title="Cargar copia de seguridad JSON">
+            ⬆️ Cargar
+            <input id="input-import-json" type="file" accept=".json" class="hidden">
+          </label>
+
+        </div>
+
+      </div>
+
+      <!-- Encabezado de la Lista de Productos -->
+      <div class="flex items-center justify-between px-2">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-gray-500">
+          Listado de Delicias en Almacenamiento Local
+        </h3>
+        <span class="text-xs text-brand-600 font-semibold flex items-center gap-1">
+          <span class="w-2 h-2 rounded-full bg-amber-500 inline-block pulse-sync"></span>
+          <span>Editá precio o disponibilidad y presioná "Guardar"</span>
+        </span>
+      </div>
+
+      <!-- Contenedor Dinámico de Productos -->
+      <div id="admin-products-list" class="space-y-3">
+        <!-- Renderizado dinámico vía js/admin.js -->
+        <div class="p-8 text-center text-gray-400 text-xs">
+          Cargando especialidades de Pastelería Pato...
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========================================================================
+       4. FOOTER SIMPLE DEL PANEL
+       ======================================================================== -->
+  <footer class="bg-brand-950 text-gray-400 py-6 text-xs border-t border-brand-900 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+      <div class="flex items-center gap-2">
+        <span>🍰</span>
+        <span class="text-white font-bold">Pastelería Pato • Panel de la Dueña</span>
+        <span class="text-amber-200/60">| Nervo y Laínez, Haedo, Buenos Aires</span>
+      </div>
+      <p class="text-[11px] text-gray-500">
+        Los cambios guardados impactan de inmediato en la tienda pública (index.html) mediante <code class="text-amber-400">localStorage</code>.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Scripts del Proyecto: Capa de Datos, Servicio y Lógica Admin Vanilla -->
+  <script src="data/config.js"></script>
+  <script src="data/products.js"></script>
+  <script src="js/productsService.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
