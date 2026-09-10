@@ -4,6 +4,29 @@ Registro cronológico de modificaciones técnicas, correcciones y mejoras aplica
 
 ---
 
+## [2026-09-10] - Implementación de Capacidades PWA e Instalación Nativa en Android / iOS
+
+### 📌 Categoría
+**Mobile First / Progressive Web App (PWA) / Experiencia de Usuario & Retención**
+
+### 🔍 Diagnóstico de Oportunidad
+* **Fricción de acceso desde el mostrador y para clientes recurrentes:** Pato y los clientes debían abrir el navegador, tipear la URL o buscar en pestañas para entrar al menú o al panel administrativo.
+* **Falta de soporte como aplicación instalable:** No existía `manifest.json`, iconos adaptativos de alta resolución ni Service Worker para calificar como PWA instalable en Android, iOS o Windows.
+
+### 🛠️ Cambios Realizados
+1. **Generación de Iconos Retina Adaptativos y Maskable:**
+   * Creación de `public/assets/icon-192.png`, `public/assets/icon-512.png` y `public/assets/icon-maskable-512.png` con identidad de Pastelería Pato (paleta frambuesa `#4C0519`, acento dorado `#F59E0B` y fondo adaptativo seguro para Android).
+2. **Creación del Manifiesto Oficial (`manifest.json`):**
+   * Configuración de modo `display: standalone` (sin barra de navegador), orientación vertical, colores de tema (`theme_color: #4C0519`, `background_color: #FAF6F5`), y accesos directos (*shortcuts*) al catálogo y al panel admin.
+3. **Desarrollo de Service Worker Ultraligero (`sw.js`):**
+   * Pre-cacheo de recursos estáticos clave (CSS, JS, iconos), estrategia Stale-While-Revalidate para assets y Network-First para navegación, con bypass total a peticiones de Firestore en tiempo real para no afectar la frescura de los datos.
+4. **Módulo de Control y Eventos (`js/pwa.js`):**
+   * Registro transparente del Service Worker, captura del evento `beforeinstallprompt`, soporte de instalación en iPhone/Safari y celebración con confeti ante instalación exitosa.
+5. **Botones Inteligentes de Instalación:**
+   * Incorporación de botones contextuales `📲 Instalar App` en el header de `index.html` y en `admin.html`, visibles automáticamente cuando el navegador del usuario permite la instalación directa.
+
+---
+
 ## [2026-09-10] - Implementación de Suite de Derechos de Autor, Gobernanza y Branding
 
 ### 📌 Categoría

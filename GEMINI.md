@@ -64,6 +64,7 @@ pasteleria-pato/
 | **Panel Admin**    | JavaScript Vanilla Puro (ES Modules nativos)                     | Gestión táctil con PIN de precios y delicias |
 | **Notificaciones** | Toastify JS (CDN)                                                 | Feedback visual al agregar al carrito y guardar |
 | **Tipografía**     | Google Fonts (Outfit · Plus Jakarta Sans · Inter)                 | Jerarquía visual gastronómica premium |
+| **Capacidades PWA** | Web App Manifest + Service Worker + Iconos Retina                 | Instalación 1-clic en Android/iOS como app nativa a costo $0 |
 
 > 🚫 **PROHIBICIÓN ESTRICTA:** No convertir este proyecto a una SPA pesada basada en React, Angular o Next.js. La web corre directamente en el navegador sin paso de compilación obligatorio.
 

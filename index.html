@@ -14,6 +14,18 @@
   <!-- Favicon artesanal de pastelería -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
 
+  <!-- Configuración PWA e Instalación en Android / iOS -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4C0519">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Pastelería Pato">
+  <link rel="apple-touch-icon" href="public/assets/icon-192.png">
+
+  <!-- Módulo PWA y Service Worker -->
+  <script type="module" src="js/pwa.js"></script>
+
   <!-- Import Map para soporte nativo de módulos en navegadores (Alpine.js y Firebase) -->
   <script type="importmap">
     {
@@ -156,6 +168,14 @@
       <!-- Botones de Acción: Carrito, Admin y WhatsApp -->
       <div class="flex items-center gap-2 sm:gap-2.5">
         
+        <!-- Botón de Instalación PWA (Visible en dispositivos compatibles) -->
+        <button onclick="window.installPwa()" 
+                title="Instalar Pastelería Pato en tu celular"
+                class="pwa-install-btn hidden items-center gap-1.5 bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 border border-rose-400/40 text-white text-xs font-bold py-2 px-2.5 sm:px-3 rounded-xl shadow-md transition-all active:scale-95">
+          <span>📲</span>
+          <span class="hidden sm:inline">Instalar App</span>
+        </button>
+
         <!-- Acceso al Panel de Control Admin -->
         <a href="admin.html" 
            title="Abrir Panel de Control del Dueño"
