@@ -249,7 +249,7 @@ const pasteleriaAppFactory = () => ({
     const message = customMessage || `Hola ${storeName}! Te escribo desde la tienda online de Pastelería Pato en Haedo para hacerte una consulta.`;
     return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
   }
-};
+});
 
 // Registro oficial como pasteleriaApp y alias retrocompatible
 alpineInstance.data("pasteleriaApp", pasteleriaAppFactory);
