@@ -1,8 +1,10 @@
 /**
- * Carrito de Compras Reactivo - Pastelería Pato (Haedo, Buenos Aires)
+ * 🎂 Carrito de Compras Reactivo - Pastelería Pato (Haedo, Buenos Aires)
+ * © 2026 GastroWeb Studio 360 & Pastelería Pato.
+ * Todos los derechos reservados / All Rights Reserved.
  * 
  * Gestiona el estado reactivo global del carrito mediante Alpine.store('cart'),
- * persistencia en localStorage, notificaciones Toastify y despacho a WhatsApp.
+ * persistencia en localStorage, notificaciones Toastify y despacho estructurado a WhatsApp.
  */
 
 export function setupCartStore(AlpineInstance) {

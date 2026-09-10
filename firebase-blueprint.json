@@ -61,7 +61,7 @@
   "firestore": {
     "/productos/{productId}": {
       "schema": "Product",
-      "description": "Colección de productos frescos del puesto de Roli"
+      "description": "Colección de delicias y productos de Pastelería Pato"
     }
   }
 }

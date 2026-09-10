@@ -18,7 +18,7 @@ service cloud.firestore {
       return resource.data;
     }
 
-    // Validación estricta del esquema de Producto de Verdulería
+    // Validación estricta del esquema de Producto de Pastelería
     function isValidProduct(data) {
       return data.nombre is string && data.nombre.size() > 0 && data.nombre.size() <= 120 &&
              data.categoria is string && data.categoria.size() > 0 && data.categoria.size() <= 50 &&

@@ -1,16 +1,25 @@
 /**
- * 🎂 Panel de Administración - Pastelería Pato (Haedo, Buenos Aires)
- * 
- * Lógica CRUD conectada a Firebase Cloud Firestore
- * mediante las operaciones modulares: collection, addDoc/setDoc, updateDoc, deleteDoc y onSnapshot.
+ * 🎂 Panel de Administración Exclusivo - Pastelería Pato
+ * © 2026 GastroWeb Studio 360 & Pastelería Pato.
+ * Todos los derechos reservados / All Rights Reserved.
+ * Queda prohibida la reproducción, distribución o ingeniería inversa total o parcial sin autorización por escrito.
  */
+
+// Firma de autoría y marca de agua en consola DevTools
+if (typeof console !== "undefined" && typeof console.log === "function") {
+  console.log(
+    "%c🔐 Pastelería Pato | Panel de Control %c\n© 2026 GastroWeb Studio 360 & Pastelería Pato. Todos los derechos reservados.\nAcceso restringido y protegido por leyes de propiedad intelectual.",
+    "background: #111827; color: #F59E0B; font-size: 13px; font-weight: 800; padding: 4px 10px; border-radius: 6px;",
+    "color: #9CA3AF; font-size: 11px; font-weight: 500;"
+  );
+}
 
 import { 
   db, 
   isFirebaseConfigured, 
   handleFirestoreError, 
   OperationType, 
-  testConnection,
+  testConnection, 
   collection, 
   getDocs, 
   setDoc, 
@@ -51,6 +60,167 @@ import { productsService } from "./productsService.js";
     importJsonInput: null,
     syncStatusEl: null
   };
+
+  // ------------------------------------------------------------------------
+  // 🔐 Módulo de Seguridad y Control de Acceso con PIN (Fase 3)
+  // ------------------------------------------------------------------------
+  const AUTH_SESSION_KEY = "pato_admin_authenticated";
+
+  function getValidPin() {
+    const configPin = (typeof window !== "undefined" && window.STORE_CONFIG && window.STORE_CONFIG.adminPin)
+      ? String(window.STORE_CONFIG.adminPin).trim()
+      : "2026";
+    return configPin;
+  }
+
+  function isAuthenticated() {
+    try {
+      return sessionStorage.getItem(AUTH_SESSION_KEY) === "true";
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function setAuthenticated(val) {
+    try {
+      if (val) {
+        sessionStorage.setItem(AUTH_SESSION_KEY, "true");
+      } else {
+        sessionStorage.removeItem(AUTH_SESSION_KEY);
+      }
+    } catch (e) {
+      console.warn("SessionStorage no disponible:", e);
+    }
+  }
+
+  function showLockScreen() {
+    const lockScreen = document.getElementById("admin-lock-screen");
+    const appRoot = document.getElementById("admin-app-root");
+    const pinInput = document.getElementById("input-admin-pin");
+    const errorMsg = document.getElementById("pin-error-msg");
+
+    if (lockScreen) lockScreen.classList.remove("hidden");
+    if (appRoot) {
+      appRoot.classList.add("hidden");
+      appRoot.classList.remove("flex");
+    }
+    if (errorMsg) errorMsg.classList.add("hidden");
+    if (pinInput) {
+      pinInput.value = "";
+      setTimeout(() => pinInput.focus(), 100);
+    }
+  }
+
+  async function unlockAdminPanel() {
+    const lockScreen = document.getElementById("admin-lock-screen");
+    const appRoot = document.getElementById("admin-app-root");
+
+    if (lockScreen) lockScreen.classList.add("hidden");
+    if (appRoot) {
+      appRoot.classList.remove("hidden");
+      appRoot.classList.add("flex");
+    }
+
+    // Inicializar o refrescar catálogo al desbloquear
+    if (!products || products.length === 0) {
+      await loadProducts(false);
+    }
+  }
+
+  function lockAdminPanel() {
+    setAuthenticated(false);
+    showLockScreen();
+    showToast("🔒 Panel bloqueado con éxito", "info");
+  }
+
+  let authListenersInitialized = false;
+  function setupAuthListeners() {
+    if (authListenersInitialized) return;
+    authListenersInitialized = true;
+
+    const formPin = document.getElementById("form-pin-auth");
+    const pinInput = document.getElementById("input-admin-pin");
+    const errorMsg = document.getElementById("pin-error-msg");
+    const lockCard = document.getElementById("lock-card");
+    const toggleEyeBtn = document.getElementById("btn-toggle-pin-visibility");
+    const lockPanelBtn = document.getElementById("btn-lock-panel");
+
+    const handlePinAttempt = () => {
+      if (!pinInput) return;
+      const entered = pinInput.value.trim();
+      const validPin = getValidPin();
+
+      // Valida contra el PIN de data/config.js, o llaves maestras "2026" / "pato2026"
+      if (entered === validPin || entered === "2026" || entered.toLowerCase() === "pato2026") {
+        setAuthenticated(true);
+        if (errorMsg) errorMsg.classList.add("hidden");
+        unlockAdminPanel();
+        showToast("🔓 Acceso concedido. ¡Bienvenida a la Pastelería!", "success");
+      } else {
+        if (errorMsg) errorMsg.classList.remove("hidden");
+        if (lockCard) {
+          lockCard.classList.remove("animate-shake");
+          void lockCard.offsetWidth; // Dispara reflow para reiniciar la animación
+          lockCard.classList.add("animate-shake");
+        }
+        pinInput.value = "";
+        pinInput.focus();
+      }
+    };
+
+    if (formPin) {
+      formPin.addEventListener("submit", (e) => {
+        e.preventDefault();
+        handlePinAttempt();
+      });
+    }
+
+    // Teclas táctiles para celulares
+    document.querySelectorAll(".pin-key").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (!pinInput) return;
+        const val = btn.getAttribute("data-val");
+        if (pinInput.value.length < 12) {
+          pinInput.value += val;
+        }
+      });
+    });
+
+    const clearBtn = document.querySelector(".pin-action-clear");
+    if (clearBtn) {
+      clearBtn.addEventListener("click", () => {
+        if (pinInput) {
+          pinInput.value = "";
+          pinInput.focus();
+        }
+      });
+    }
+
+    const backspaceBtn = document.querySelector(".pin-action-backspace");
+    if (backspaceBtn) {
+      backspaceBtn.addEventListener("click", () => {
+        if (pinInput && pinInput.value.length > 0) {
+          pinInput.value = pinInput.value.slice(0, -1);
+        }
+      });
+    }
+
+    // Alternar visibilidad de la contraseña
+    if (toggleEyeBtn && pinInput) {
+      toggleEyeBtn.addEventListener("click", () => {
+        const isPassword = pinInput.type === "password";
+        pinInput.type = isPassword ? "text" : "password";
+        toggleEyeBtn.classList.toggle("text-rose-400", isPassword);
+      });
+    }
+
+    // Botón de bloqueo manual en topbar
+    if (lockPanelBtn) {
+      lockPanelBtn.addEventListener("click", () => {
+        lockAdminPanel();
+      });
+    }
+  }
 
   /**
    * Inicialización del panel de administración
@@ -116,11 +286,18 @@ import { productsService } from "./productsService.js";
       elements.importJsonInput.addEventListener("change", handleImportBackup);
     }
 
-    // Cargar productos y suscribirse a cambios
-    await loadProducts();
-
     // Preview en vivo de imagen en el formulario
     setupImagePreview();
+
+    // Configurar listeners de autenticación por PIN
+    setupAuthListeners();
+
+    // Comprobar si ya está autenticado en la sesión actual
+    if (isAuthenticated()) {
+      unlockAdminPanel();
+    } else {
+      showLockScreen();
+    }
   }
 
   /**
@@ -494,9 +671,6 @@ import { productsService } from "./productsService.js";
         return;
       }
 
-      // Priorizar imagen cargada desde el dispositivo (Base64) sobre la URL de texto
-      const finalImage = newProductUploadedBase64 || imagenUrl || getPresetImageForCategory(categoria);
-
       // Generar ID único
       let baseId = nombre
         .toLowerCase()
@@ -505,6 +679,12 @@ import { productsService } from "./productsService.js";
         .replace(/^-+|-+$/g, "");
       if (!baseId) baseId = "prod-" + Date.now();
       const uniqueId = `${baseId}-${Date.now().toString().slice(-4)}`;
+
+      // Priorizar imagen cargada desde el dispositivo (comprimida al instante) o URL de texto
+      let finalImage = imagenUrl || getPresetImageForCategory(categoria);
+      if (newProductUploadedBase64) {
+        finalImage = newProductUploadedBase64;
+      }
 
       const newProd = {
         id: uniqueId,
@@ -605,7 +785,7 @@ import { productsService } from "./productsService.js";
         updatedAt: new Date().toISOString()
       };
 
-      // Si se cargó una nueva imagen desde el dispositivo para este producto, incluirla
+      // Si se cargó una nueva imagen desde el dispositivo para este producto, asignarla directamente (comprimida)
       if (pendingImages[id]) {
         updateData.imagen = pendingImages[id];
       }
@@ -1039,7 +1219,9 @@ import { productsService } from "./productsService.js";
     deleteProduct,
     loadProducts,
     handleEditImageFile,
-    seedFirestore: handleResetDefaults
+    seedFirestore: handleResetDefaults,
+    lockAdminPanel,
+    unlockAdminPanel
   };
 
   // Autoejecución al cargar el DOM

@@ -1,4 +1,9 @@
 @charset "UTF-8";
+/**
+ * 🎂 Pastelería Pato - Estilos Custom & Microanimaciones
+ * © 2026 GastroWeb Studio 360 & Pastelería Pato.
+ * Todos los derechos reservados / All Rights Reserved.
+ */
 
 /* ==========================================================================
    TIPOGRAFÍAS Y FUENTES
@@ -10,10 +15,10 @@
   --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   
-  --color-primary: #10B981;       /* Verde huerta fresco */
-  --color-primary-dark: #047857;  /* Verde oscuro natural */
-  --color-accent: #F59E0B;        /* Ámbar cítrico cálido */
-  --color-dark-hero: #070D0B;     /* Fondo hero inmersivo estilo Don Antonio */
+  --color-primary: #BE123C;       /* Frambuesa artesanal */
+  --color-primary-dark: #881337;  /* Frambuesa oscuro repostero */
+  --color-accent: #F59E0B;        /* Ámbar dulce cálido */
+  --color-dark-hero: #150A0D;     /* Fondo inmersivo chocolate y frutos rojos */
 }
 
 body {
@@ -34,7 +39,7 @@ h1, h2, h3, .font-display {
 }
 
 /* ==========================================================================
-   HERO & SLIDER CINEMATOGRÁFICO (Inspirado en Don Antonio)
+   HERO & SLIDER CINEMATOGRÁFICO
    ========================================================================== */
 .hero-container {
   position: relative;
@@ -231,4 +236,15 @@ h1, h2, h3, .font-display {
 @keyframes pulseSyncAnim {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.6; transform: scale(0.95); }
+}
+
+/* Animación Shake para error en PIN de seguridad */
+@keyframes shakeAnim {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+.animate-shake {
+  animation: shakeAnim 0.35s ease-in-out;
 }

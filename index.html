@@ -8,16 +8,21 @@
   <meta property="og:title" content="Pastelería Pato | Pastelería Artesanal en Haedo, Buenos Aires" />
   <meta property="og:description" content="Tienda online y panel de administración para Pastelería Pato en Haedo, Buenos Aires. Tortas artesanales, tartas dulces y pedidos por WhatsApp con sincronización en tiempo real." />
   
+  <meta name="author" content="GastroWeb Studio 360 • Pastelería Pato">
+  <meta name="copyright" content="© 2026 GastroWeb Studio 360 & Pastelería Pato. Todos los derechos reservados.">
+  
   <!-- Favicon artesanal de pastelería -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
 
-  <!-- Import Map para soporte nativo de módulos Firebase en navegadores -->
+  <!-- Import Map para soporte nativo de módulos en navegadores (Alpine.js y Firebase) -->
   <script type="importmap">
     {
       "imports": {
+        "alpinejs": "https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/module.esm.js",
         "firebase/app": "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js",
         "firebase/firestore": "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js",
-        "firebase/auth": "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js"
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js",
+        "firebase/storage": "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js"
       }
     }
   </script>
@@ -78,18 +83,6 @@
     [x-cloak] { display: none !important; }
   </style>
 
-  <!-- Import Map para resolución estándar en navegadores (Netlify, GitHub Pages, Local) -->
-  <script type="importmap">
-    {
-      "imports": {
-        "alpinejs": "https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/module.esm.js",
-        "firebase/app": "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js",
-        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js",
-        "firebase/auth": "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js"
-      }
-    }
-  </script>
-
   <!-- Capa de Datos y Configuración Base -->
   <script type="module" src="data/config.js"></script>
   <script type="module" src="data/products.js"></script>
@@ -109,7 +102,7 @@
   </script>
 </head>
 
-<body class="bg-[#FAF6F5] text-gray-800 antialiased font-body" x-data="verduleriaApp">
+<body class="bg-[#FAF6F5] text-gray-800 antialiased font-body" x-data="pasteleriaApp">
 
   <!-- ========================================================================
        1. TOPBAR DE ESTADO & UBICACIÓN DEL BARRIO
@@ -185,7 +178,6 @@
         </button>
 
         <a :href="getWhatsAppGeneralLink('Hola Pato! Te escribo desde la página web para hacerte una consulta sobre las tortas.')"
-           href="https://wa.me/5491159665917?text=Hola%20Pato!%20Te%20escribo%20desde%20la%20página%20web%20para%20hacerte%20una%20consulta%20sobre%20las%20tortas." 
            target="_blank" 
            rel="noopener noreferrer"
            class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs sm:text-sm font-semibold py-2 px-3 sm:px-4 rounded-xl shadow-lg shadow-emerald-900/30 hover:shadow-emerald-500/20 active:scale-95 transition-all">
@@ -623,7 +615,6 @@
               Escribinos directamente al WhatsApp de Pastelería Pato y coordinamos tu pedido para tu festejo o la merienda.
             </p>
             <a :href="getWhatsAppGeneralLink('Hola Pato! Quería consultarte por las tortas y tartas del día.')"
-               href="https://wa.me/5491159665917?text=Hola%20Pato!%20Quería%20consultarte%20por%20las%20tortas%20y%20tartas%20del%20día." 
                target="_blank" 
                rel="noopener noreferrer"
                class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3.5 px-6 rounded-2xl transition-all shadow-lg shadow-emerald-900/30 active:scale-95 text-sm flex items-center justify-center gap-2">
@@ -654,12 +645,14 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-4 text-[11px]">
+      <div class="flex flex-col sm:flex-row items-center gap-1.5 sm:gap-3 text-[11px]">
         <a href="admin.html" class="text-amber-400 hover:text-white font-semibold underline underline-offset-4 transition-colors">
-          ⚙️ Panel de Control del Dueño (admin.html)
+          ⚙️ Panel Dueño (admin.html)
         </a>
-        <span class="text-gray-700">|</span>
-        <span class="text-gray-500">© 2026 Pastelería Pato • Haedo</span>
+        <span class="hidden sm:inline text-gray-700">•</span>
+        <span class="text-gray-400">© 2026 Pastelería Pato. Todos los derechos reservados.</span>
+        <span class="hidden sm:inline text-gray-700">•</span>
+        <span class="text-rose-400 font-medium">Desarrollado por GastroWeb Studio 360</span>
       </div>
     </div>
   </footer>

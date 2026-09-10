@@ -1,9 +1,11 @@
 /**
- * Servicio de Productos - Verdulería Roli
- * Integración con Firebase Cloud Firestore (Modular SDK v10) & Fallback Local
+ * 🎂 Servicio de Productos - Pastelería Pato (Haedo, Buenos Aires)
+ * © 2026 GastroWeb Studio 360 & Pastelería Pato.
+ * Todos los derechos reservados / All Rights Reserved.
  * 
- * Gestiona la persistencia de productos en la colección "productos" de Firestore
- * y provee sincronización y operaciones CRUD desacopladas.
+ * Integración con Firebase Cloud Firestore (Modular SDK v10), Firebase Storage & Fallback Local
+ * Gestiona la persistencia de delicias en la colección "productos" de Firestore,
+ * optimización de imágenes en la nube y suscripción reactiva en tiempo real mediante Patrón Observer.
  */
 
 import { 
@@ -18,9 +20,14 @@ import {
   addDoc, 
   updateDoc, 
   deleteDoc, 
+  onSnapshot,
   writeBatch,
   query,
-  orderBy
+  orderBy,
+  storage,
+  storageRef,
+  uploadString,
+  getDownloadURL
 } from "./firebase-config.js";
 import { INITIAL_PRODUCTS, CATEGORIES } from "../data/products.js";
 import { STORE_CONFIG } from "../data/config.js";
@@ -44,6 +51,119 @@ export const productsService = {
   STORAGE_KEY,
 
   /**
+   * Suscribe un observador a las actualizaciones en tiempo real del catálogo de productos.
+   * Encapsula Cloud Firestore (`onSnapshot`) si está configurado y online, o activa el fallback
+   * reactivo a `localStorage` (escuchando eventos nativos entre pestañas y CustomEvents en la misma pestaña).
+   * 
+   * Cumple con el Patrón Observer y desacopla la vista de la tecnología de base de datos.
+   * 
+   * @param {Object|Function} listener - Callback function(products, meta) o { onData: Function, onError: Function }
+   * @returns {Function} Función unsubscribe() para limpiar todos los listeners activos.
+   */
+  subscribeToProducts(listener) {
+    const onData = typeof listener === "function" ? listener : listener?.onData;
+    const onError = typeof listener === "object" ? listener?.onError : null;
+
+    let isUnsubscribed = false;
+    let unsubscribeFirestore = null;
+    let storageListener = null;
+    let customEventListener = null;
+
+    const notify = (items, meta = {}) => {
+      if (!isUnsubscribed && typeof onData === "function") {
+        onData(items, meta);
+      }
+    };
+
+    const activateLocalFallback = async () => {
+      try {
+        const localItems = await this.getProducts();
+        notify(localItems, { isLiveFromFirestore: false });
+
+        if (typeof window !== "undefined") {
+          storageListener = async (event) => {
+            if (event.key === STORAGE_KEY || !event.key) {
+              const fresh = await this.getProducts();
+              notify(fresh, { isLiveFromFirestore: false });
+            }
+          };
+          window.addEventListener("storage", storageListener);
+
+          customEventListener = (event) => {
+            if (event.detail && Array.isArray(event.detail.products)) {
+              notify(event.detail.products, { isLiveFromFirestore: false });
+            }
+          };
+          window.addEventListener("products-updated", customEventListener);
+        }
+      } catch (err) {
+        if (typeof onError === "function") onError(err);
+      }
+    };
+
+    if (isFirebaseConfigured()) {
+      try {
+        const colRef = collection(db, "productos");
+        unsubscribeFirestore = onSnapshot(
+          colRef,
+          async (snapshot) => {
+            if (isUnsubscribed) return;
+
+            const items = [];
+            snapshot.forEach((docSnap) => {
+              items.push({
+                id: docSnap.id,
+                ...docSnap.data()
+              });
+            });
+
+            if (items.length > 0) {
+              notify(items, { isLiveFromFirestore: true });
+            } else {
+              console.info("ℹ️ [productsService] Colección Firestore vacía. Sembrando catálogo inicial de pastelería...");
+              try {
+                const defaults = await this.seedFirestore();
+                notify(defaults, { isLiveFromFirestore: true, isInitialSeed: true });
+              } catch (seedErr) {
+                console.warn("⚠️ [productsService] Error sembrando Firestore, activando fallback local:", seedErr);
+                activateLocalFallback();
+              }
+            }
+          },
+          (error) => {
+            handleFirestoreError(error, OperationType.LIST, "productos");
+            console.warn("⚠️ [productsService] Error en onSnapshot de Firestore, activando fallback local:", error);
+            if (typeof onError === "function") onError(error);
+            activateLocalFallback();
+          }
+        );
+      } catch (err) {
+        console.error("⚠️ [productsService] Error al conectar suscripción de Firestore:", err);
+        if (typeof onError === "function") onError(err);
+        activateLocalFallback();
+      }
+    } else {
+      activateLocalFallback();
+    }
+
+    return () => {
+      isUnsubscribed = true;
+      if (typeof unsubscribeFirestore === "function") {
+        unsubscribeFirestore();
+        unsubscribeFirestore = null;
+      }
+      if (storageListener && typeof window !== "undefined") {
+        window.removeEventListener("storage", storageListener);
+        storageListener = null;
+      }
+      if (customEventListener && typeof window !== "undefined") {
+        window.removeEventListener("products-updated", customEventListener);
+        customEventListener = null;
+      }
+    };
+  },
+
+  /**
    * Obtiene los productos desde Cloud Firestore (o localStorage si no está configurado)
    * @returns {Promise<Array>} Lista de productos
    */
@@ -61,8 +181,7 @@ export const productsService = {
           }));
           return firestoreProducts;
         } else {
-          console.info("ℹ️ La colección 'productos' en Firestore está vacía. Sembrando productos iniciales...");
-          // Si está vacía la primera vez, sembrar los productos por defecto automáticamente
+          console.info("ℹ️ La colección 'productos' en Firestore está vacía. Sembrando delicias iniciales...");
           const defaults = getDefaultProducts();
           if (defaults.length > 0) {
             await this.seedFirestore(defaults);
@@ -101,19 +220,42 @@ export const productsService = {
   },
 
   /**
-   * Agrega un nuevo producto a Cloud Firestore
+   * En el Plan Gratuito (Spark), retorna null para persistir directamente la imagen
+   * comprimida por canvas en Firestore, garantizando costo $0 y evitando errores de CORS/Storage.
+   * 
+   * @param {string} dataUrl Cadena dataUrl de la imagen
+   * @param {string} productId ID del producto asociado
+   * @returns {Promise<string|null>}
+   */
+  async uploadProductImage(dataUrl, productId) {
+    // Almacenamiento directo en Firestore (100% Gratuito y sin demoras de red)
+    return null;
+  },
+
+  /**
+   * Agrega un nuevo producto a Cloud Firestore y/o LocalStorage
    * @param {Object} product
    */
   async addProduct(product) {
     // Generar un ID legible y único
-    let baseId = (product.nombre || "producto")
+    let baseId = (product.nombre || "delicia")
       .toLowerCase()
       .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
 
-    if (!baseId) baseId = "prod-" + Date.now();
+    if (!baseId) baseId = "delicia-" + Date.now();
     const uniqueId = `${baseId}-${Date.now().toString().slice(-4)}`;
+
+    let finalImage = product.imagen || "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80";
+
+    // Si la imagen es Base64, intentar subir a Firebase Storage para persistir solo la URL corta
+    if (finalImage && typeof finalImage === "string" && finalImage.startsWith("data:image/")) {
+      const storageUrl = await this.uploadProductImage(finalImage, uniqueId);
+      if (storageUrl) {
+        finalImage = storageUrl;
+      }
+    }
 
     const newProduct = {
       id: uniqueId,
@@ -121,7 +263,7 @@ export const productsService = {
       categoria: product.categoria || "tortas",
       precio: Math.max(0, Math.round(Number(product.precio) || 0)),
       unidad: product.unidad || "unidad",
-      imagen: product.imagen || "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80",
+      imagen: finalImage,
       descripcion: (product.descripcion || "").trim() || "Elaboración artesanal fresca en Pastelería Pato.",
       destacado: Boolean(product.destacado),
       etiqueta: (product.etiqueta || "Especialidad").trim(),
@@ -133,7 +275,7 @@ export const productsService = {
       try {
         const docRef = doc(db, "productos", uniqueId);
         await setDoc(docRef, newProduct);
-        console.log(`✅ [Firestore] Producto "${newProduct.nombre}" agregado con ID ${uniqueId}`);
+        console.log(`✅ [Firestore] Delicia "${newProduct.nombre}" agregada con ID ${uniqueId}`);
         return newProduct;
       } catch (error) {
         handleFirestoreError(error, OperationType.CREATE, `productos/${uniqueId}`);
@@ -166,6 +308,14 @@ export const productsService = {
     }
     if (cleanUpdates.disponible !== undefined) {
       cleanUpdates.disponible = cleanUpdates.disponible !== false && cleanUpdates.disponible !== "agotado";
+    }
+
+    // Si se envía una imagen Base64, intentar subir a Storage y persistir solo la URL
+    if (cleanUpdates.imagen && typeof cleanUpdates.imagen === "string" && cleanUpdates.imagen.startsWith("data:image/")) {
+      const storageUrl = await this.uploadProductImage(cleanUpdates.imagen, id);
+      if (storageUrl) {
+        cleanUpdates.imagen = storageUrl;
+      }
     }
 
     if (isFirebaseConfigured()) {
@@ -295,7 +445,7 @@ export const productsService = {
   },
 
   /**
-   * Obtiene la información institucional del puesto
+   * Obtiene la información institucional de la pastelería
    */
   async getStoreInfo() {
     const info = (typeof window !== "undefined" && (window.STORE_CONFIG || window.storeInfo)) 

@@ -6,6 +6,9 @@
   <title>Panel de Control | Pastelería Pato</title>
   <meta name="description" content="Panel de administración de Pastelería Pato en Haedo. Gestioná tortas, precios, disponibilidad y catálogo con sincronización en tiempo real.">
   
+  <meta name="author" content="GastroWeb Studio 360 • Pastelería Pato">
+  <meta name="copyright" content="© 2026 GastroWeb Studio 360 & Pastelería Pato. Todos los derechos reservados.">
+  
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
 
@@ -15,7 +18,8 @@
       "imports": {
         "firebase/app": "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js",
         "firebase/firestore": "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js",
-        "firebase/auth": "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js"
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js",
+        "firebase/storage": "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js"
       }
     }
   </script>
@@ -70,6 +74,105 @@
 <body class="bg-[#FDF9F8] text-gray-800 antialiased font-body min-h-screen flex flex-col">
 
   <!-- ========================================================================
+       0. PANTALLA DE BLOQUEO Y SEGURIDAD CON PIN (Acceso Exclusivo para Pato)
+       ======================================================================== -->
+  <div id="admin-lock-screen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#150A0D] min-h-screen">
+    <!-- Luces decorativas de fondo -->
+    <div class="absolute w-72 h-72 rounded-full bg-rose-600/20 blur-3xl pointer-events-none -top-10 -left-10"></div>
+    <div class="absolute w-72 h-72 rounded-full bg-amber-500/15 blur-3xl pointer-events-none -bottom-10 -right-10"></div>
+
+    <div id="lock-card" class="relative w-full max-w-sm bg-white/10 backdrop-blur-xl border border-white/20 p-6 sm:p-8 rounded-3xl shadow-2xl text-center text-white">
+      
+      <!-- Icono de Cabecera -->
+      <div class="relative mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-3xl shadow-lg shadow-brand-500/30 mb-4">
+        🎂
+        <span class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-amber-400 text-gray-950 text-xs font-black flex items-center justify-center shadow-md">
+          🔒
+        </span>
+      </div>
+
+      <!-- Títulos -->
+      <h2 class="text-xl sm:text-2xl font-black font-display tracking-tight text-white mb-1">
+        Panel de Administración
+      </h2>
+      <p class="text-xs text-rose-200/80 mb-6">
+        Pastelería Pato • Acceso exclusivo para el dueño
+      </p>
+
+      <!-- Formulario de Desbloqueo -->
+      <form id="form-pin-auth" class="space-y-4" onsubmit="event.preventDefault();">
+        <div class="relative">
+          <input 
+            type="password" 
+            id="input-admin-pin" 
+            maxlength="12" 
+            placeholder="Ingresá tu PIN" 
+            autocomplete="current-password"
+            inputmode="numeric"
+            class="w-full text-center text-2xl tracking-[0.3em] font-black bg-black/40 border border-white/20 rounded-2xl py-3.5 px-4 text-white placeholder:text-gray-500 placeholder:text-sm placeholder:tracking-normal focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-400/30 transition-all shadow-inner"
+            required
+          />
+          <button 
+            type="button" 
+            id="btn-toggle-pin-visibility" 
+            title="Mostrar / Ocultar PIN"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white p-1.5 transition-colors">
+            <svg id="icon-pin-eye" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Mensaje de Error -->
+        <div id="pin-error-msg" class="hidden text-xs text-rose-300 bg-rose-500/20 border border-rose-500/30 py-2 px-3 rounded-xl font-semibold">
+          ⚠️ PIN incorrecto. Intentá nuevamente.
+        </div>
+
+        <!-- Teclado Numérico Táctil (Ideal para celular en el local) -->
+        <div class="grid grid-cols-3 gap-2 pt-2">
+          <button type="button" class="pin-key bg-white/5 hover:bg-white/15 border border-white/10 text-white font-bold text-lg py-2.5 rounded-xl active:scale-95 transition-all" data-val="1">1</button>
+          <button type="button" class="pin-key bg-white/5 hover:bg-white/15 border border-white/10 text-white font-bold text-lg py-2.5 rounded-xl active:scale-95 transition-all" data-val="2">2</button>
+          <button type="button" class="pin-key bg-white/5 hover:bg-white/15 border border-white/10 text-white font-bold text-lg py-2.5 rounded-xl active:scale-95 transition-all" data-val="3">3</button>
+          <button type="button" class="pin-key bg-white/5 hover:bg-white/15 border border-white/10 text-white font-bold text-lg py-2.5 rounded-xl active:scale-95 transition-all" data-val="4">4</button>
+          <button type="button" class="pin-key bg-white/5 hover:bg-white/15 border border-white/10 text-white font-bold text-lg py-2.5 rounded-xl active:scale-95 transition-all" data-val="5">5</button>
+          <button type="button" class="pin-key bg-white/5 hover:bg-white/15 border border-white/10 text-white font-bold text-lg py-2.5 rounded-xl active:scale-95 transition-all" data-val="6">6</button>
+          <button type="button" class="pin-key bg-white/5 hover:bg-white/15 border border-white/10 text-white font-bold text-lg py-2.5 rounded-xl active:scale-95 transition-all" data-val="7">7</button>
+          <button type="button" class="pin-key bg-white/5 hover:bg-white/15 border border-white/10 text-white font-bold text-lg py-2.5 rounded-xl active:scale-95 transition-all" data-val="8">8</button>
+          <button type="button" class="pin-key bg-white/5 hover:bg-white/15 border border-white/10 text-white font-bold text-lg py-2.5 rounded-xl active:scale-95 transition-all" data-val="9">9</button>
+          <button type="button" class="pin-action-clear bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-300 font-bold text-xs py-2.5 rounded-xl active:scale-95 transition-all" title="Borrar todo">C</button>
+          <button type="button" class="pin-key bg-white/5 hover:bg-white/15 border border-white/10 text-white font-bold text-lg py-2.5 rounded-xl active:scale-95 transition-all" data-val="0">0</button>
+          <button type="button" class="pin-action-backspace bg-white/5 hover:bg-white/15 border border-white/10 text-gray-300 font-bold text-sm py-2.5 rounded-xl active:scale-95 transition-all" title="Borrar último dígito">⌫</button>
+        </div>
+
+        <!-- Botón de Desbloqueo -->
+        <button 
+          type="submit" 
+          id="btn-submit-pin"
+          class="w-full mt-3 bg-gradient-to-r from-brand-500 to-brand-700 hover:from-brand-600 hover:to-brand-800 text-white font-black py-3 px-4 rounded-xl shadow-lg shadow-brand-500/25 active:scale-95 transition-all flex items-center justify-center gap-2 text-sm tracking-wide">
+          <span>Desbloquear Panel</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+          </svg>
+        </button>
+      </form>
+
+      <!-- Enlace a Tienda -->
+      <div class="mt-6 pt-5 border-t border-white/10">
+        <a href="index.html" class="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-rose-300 transition-colors">
+          <span>← Volver a la Tienda Pública</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       CONTENEDOR DE LA APLICACIÓN ADMINISTRATIVA (Protegido por PIN)
+       ======================================================================== -->
+  <div id="admin-app-root" class="hidden flex-col min-h-screen flex-1">
+
+  <!-- ========================================================================
        1. TOPBAR DE ESTADO & ENLACE A LA TIENDA
        ======================================================================== -->
   <div class="bg-brand-900 text-brand-100 text-xs py-2 px-4 border-b border-brand-800/80">
@@ -113,8 +216,15 @@
         </div>
       </div>
 
-      <!-- Navegación hacia Tienda -->
+      <!-- Navegación hacia Tienda y Bloqueo -->
       <div class="flex items-center gap-2">
+        <button 
+          type="button" 
+          id="btn-lock-panel"
+          class="inline-flex items-center gap-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs sm:text-sm font-semibold py-2 px-3 sm:px-4 rounded-xl transition-all active:scale-95"
+          title="Bloquear panel de administración">
+          <span>🔒 Bloquear</span>
+        </button>
         <a href="index.html" 
            class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs sm:text-sm font-semibold py-2 px-3 sm:px-4 rounded-xl backdrop-blur-md active:scale-95 transition-all">
           <span>← Volver a la Tienda</span>
@@ -439,11 +549,15 @@
         <span class="text-white font-bold">Pastelería Pato • Panel de Administración</span>
         <span class="text-gray-500">| Nervo y Lainez, Haedo, Buenos Aires</span>
       </div>
-      <p class="text-[11px] text-gray-500">
-        Los cambios guardados impactan de inmediato en la tienda pública (index.html) mediante <code class="text-rose-400">localStorage</code>.
-      </p>
+      <div class="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-[11px] text-gray-400">
+        <span>© 2026 Pastelería Pato. Todos los derechos reservados.</span>
+        <span class="hidden sm:inline text-gray-700">•</span>
+        <span class="text-rose-400 font-medium">Desarrollado por GastroWeb Studio 360</span>
+      </div>
     </div>
   </footer>
+
+  </div><!-- Cierre de #admin-app-root -->
 
   <!-- Scripts del Proyecto: Capa de Datos, Servicio y Lógica Admin Modular -->
   <script type="module" src="data/config.js"></script>

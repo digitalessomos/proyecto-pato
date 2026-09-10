@@ -1,14 +1,11 @@
 /**
- * 🔥 Configuración de Firebase Cloud Firestore (Modular SDK v10)
- * Verdulería Tefy - Catálogo y Precios en Tiempo Real
+ * 🎂 Configuración de Firebase Cloud Firestore y Firebase Storage (Modular SDK v10)
+ * Pastelería Pato - Catálogo y Precios en Tiempo Real
+ * © 2026 GastroWeb Studio 360 & Pastelería Pato.
+ * Todos los derechos reservados / All Rights Reserved.
  * 
  * Se importa directamente desde el CDN oficial de Google Firebase (gstatic)
  * para compatibilidad nativa en navegadores sin necesidad de empaquetadores.
- * 
- * INSTRUCCIONES:
- * Reemplazá los valores del objeto `firebaseConfig` a continuación con las
- * credenciales de tu proyecto obtenidas desde la consola de Firebase:
- * https://console.firebase.google.com/
  */
 
 import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
@@ -29,9 +26,16 @@ import {
   orderBy
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import {
+  getStorage,
+  ref as storageRef,
+  uploadString,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js";
 
-// Re-exportamos todas las funciones modulares de Firestore para que los módulos
-// del proyecto puedan importarlas directamente desde "./firebase-config.js" de forma relativa.
+// Re-exportamos todas las funciones modulares para que los módulos
+// del proyecto puedan importarlas directamente de forma relativa.
 export {
   initializeApp,
   getApps,
@@ -50,10 +54,15 @@ export {
   writeBatch,
   query,
   orderBy,
-  getAuth
+  getAuth,
+  getStorage,
+  storageRef,
+  uploadString,
+  uploadBytes,
+  getDownloadURL
 };
 
-// Objeto de configuración de tu proyecto en Firebase
+// Objeto de configuración oficial de Pastelería Pato en Firebase
 export const firebaseConfig = {
   apiKey: "AIzaSyABfxc8ro13VetgNfRIrn_g4-yMP_L_jYc",
   authDomain: "pasteleriabd-a7b6b.firebaseapp.com",
@@ -65,7 +74,7 @@ export const firebaseConfig = {
 
 /**
  * Verifica si las credenciales fueron provistas por el usuario
- * o si aún contienen los valores de ejemplo por defecto.
+ * o si aún contienen valores por defecto de demostración.
  */
 export function isFirebaseConfigured() {
   return Boolean(
@@ -82,13 +91,15 @@ const firebaseAppConfig = isFirebaseConfigured()
   ? firebaseConfig
   : {
     apiKey: "demo-dummy-key-for-initialization",
-    projectId: "demo-verduleria-tefy",
+    projectId: "demo-pasteleria-pato",
     appId: "demo-app-id"
   };
 
 export const app = getApps().length > 0 ? getApp() : initializeApp(firebaseAppConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
+// Desactivado para Plan Spark 100% Gratuito (evita requerimiento de tarjeta y errores de CORS)
+export const storage = null;
 
 // Tipos de operaciones para auditoría y reporte de errores
 export const OperationType = {

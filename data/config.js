@@ -1,7 +1,10 @@
 /**
- * ⚙️ CONFIGURACIÓN GLOBAL DEL COMERCIO - Pastelería Pato (Haedo, Buenos Aires)
+ * ⚙️ CONFIGURACIÓN GLOBAL DEL COMERCIO - GastroWeb Studio 360
+ * © 2026 GastroWeb Studio 360 & Pastelería Pato.
+ * Todos los derechos reservados / All Rights Reserved.
  * 
- * Centralización de variables de identidad, ubicación y contacto de la pastelería.
+ * Centralización de variables clave para que clonar o adaptar este sitio
+ * a otra pastelería, panadería o negocio gastronómico tome solo 10 segundos.
  * 
  * Al cambiar 'telefonoWhatsApp' aquí, se actualiza automáticamente en:
  * 1. Botón de WhatsApp del Header / Navegación
@@ -12,11 +15,15 @@
 
 const STORE_CONFIG = {
   // 📱 NÚMERO DE WHATSAPP OFICIAL (Formato internacional, sin signos +, guiones ni espacios)
+  // Argentina: 549 + código de área + número local
   telefonoWhatsApp: "5491159665917",
 
   // 💳 DATOS DE PAGO / ALIAS (Transferencia bancaria y Mercado Pago)
   aliasPago: "Pato.pasteleria.haedo",
   titularPago: "Pato (Pastelería Pato)",
+
+  // 🔐 PIN DE SEGURIDAD PARA ACCESO A PANEL ADMIN (admin.html)
+  adminPin: "2026",
 
   // 🏪 Datos de Identidad del Comercio
   nombre: "Pastelería Pato",
