@@ -204,22 +204,19 @@
   </header>
 
   <!-- ========================================================================
-       3. HERO CINEMATOGRÁFICO CON SLIDER ELEGANTE
+       3. HERO CINEMATOGRÁFICO CON VIDEO DE FONDO
        ======================================================================== -->
   <section id="inicio" class="hero-container relative">
     
-    <!-- CONTENEDOR DE MEDIOS DEL HERO: IMAGEN DINÁMICA DE ALTA CALIDAD -->
+    <!-- CONTENEDOR DE MEDIOS DEL HERO: VIDEO DE FONDO CINEMATOGRÁFICO -->
     <div class="absolute inset-0 w-full h-full overflow-hidden z-0">
-      <template x-if="slides && slides.length > 0">
-        <img :src="slides[currentSlide] ? slides[currentSlide].imagen : 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1920&q=80'" 
-             :alt="slides[currentSlide] ? slides[currentSlide].titulo : 'Pastelería Pato en Haedo'"
-             class="w-full h-full object-cover filter brightness-[0.48] contrast-[1.10] scale-105 pointer-events-none transition-all duration-700">
-      </template>
-      <template x-if="!slides || slides.length === 0">
+      <video autoplay muted loop playsinline preload="metadata" poster="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1920&q=80" class="w-full h-full object-cover filter brightness-[0.48] contrast-[1.10] scale-105 pointer-events-none">
+        <source src="tools/fondo.mp4" type="video/mp4">
+        <source src="public/assets/fondo.mp4" type="video/mp4">
         <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1920&q=80" 
              alt="Pastelería Pato en Haedo"
              class="w-full h-full object-cover filter brightness-[0.48] contrast-[1.10] scale-105 pointer-events-none">
-      </template>
+      </video>
 
       <!-- Overlay con gradiente cinematográfico para garantizar contraste total del texto -->
       <div class="absolute inset-0 hero-overlay z-20 pointer-events-none"></div>
@@ -234,7 +231,7 @@
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
           <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
         </span>
-        <span x-text="slides[currentSlide] ? slides[currentSlide].badge : '🎂 Horneado del Día'">🎂 Horneado del Día</span>
+        <span>🎂 Horneado del Día</span>
         <span class="text-white/40">•</span>
         <span class="text-rose-300 font-semibold">Nervo y Lainez, Haedo</span>
       </div>
@@ -245,8 +242,7 @@
       </h1>
 
       <!-- Subtítulo Apetitoso -->
-      <p class="text-lg sm:text-xl md:text-2xl text-gray-200 max-w-3xl font-light mb-8 leading-relaxed drop-shadow"
-         x-text="slides[currentSlide] ? slides[currentSlide].subtitulo : 'Tortas personalizadas, tartas tradicionales, alfajores de maicena y delicias recién horneadas para cada festejo.'">
+      <p class="text-lg sm:text-xl md:text-2xl text-gray-200 max-w-3xl font-light mb-8 leading-relaxed drop-shadow">
         Tortas personalizadas, tartas tradicionales, alfajores de maicena y delicias recién horneadas para cada festejo.
       </p>
 
@@ -254,7 +250,7 @@
       <div class="bg-black/50 border border-rose-500/30 backdrop-blur-md px-5 py-2.5 rounded-2xl text-rose-200 text-xs sm:text-sm font-medium mb-10 inline-flex items-center gap-2">
         <span class="text-accent-400">⚡</span>
         <span class="text-white">Especialidades de Pato:</span>
-        <strong class="text-amber-300 font-bold" x-text="slides[currentSlide] ? slides[currentSlide].destacado : 'Rogel Clásico, Chocotorta, Lemon Pie y Havannet'">Rogel Clásico, Chocotorta, Lemon Pie y Havannet</strong>
+        <strong class="text-amber-300 font-bold">Rogel Clásico, Chocotorta, Lemon Pie y Havannet</strong>
       </div>
 
       <!-- Botones de Acción Inmediata (Thumb-Zone) -->
@@ -271,17 +267,6 @@
                 class="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md font-semibold px-6 py-4 rounded-2xl active:scale-95 transition-all text-base flex items-center justify-center gap-2 font-display">
           <span>👩‍🍳 Conocer a Pato</span>
         </button>
-      </div>
-
-      <!-- Controles del Slider (Dots) -->
-      <div class="flex items-center justify-center gap-2 mt-8">
-        <template x-for="(s, idx) in slides" :key="s.id">
-          <button @click="goToSlide(idx)" 
-                  class="h-2.5 rounded-full transition-all duration-300"
-                  :class="currentSlide === idx ? 'w-8 bg-rose-400 shadow-md' : 'w-2.5 bg-white/40 hover:bg-white/70'"
-                  :title="'Ir al slide ' + (idx + 1)">
-          </button>
-        </template>
       </div>
 
     </div>
