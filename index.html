@@ -659,25 +659,55 @@
   <!-- ========================================================================
        7. FOOTER INSTITUCIONAL Y DE BARRIO
        ======================================================================== -->
-  <footer class="bg-gray-950 text-gray-400 py-10 border-t border-gray-900 text-xs">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-      <div class="flex items-center gap-3">
-        <span class="text-2xl">🎂</span>
-        <div>
-          <p class="text-white font-bold text-sm font-display">PASTELERÍA PATO</p>
-          <p class="text-gray-500 text-[11px]">Pastelería Artesanal • Calle Nervo y Lainez, Haedo, Buenos Aires</p>
+  <footer class="bg-gray-950 text-gray-400 py-12 border-t border-gray-900 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      
+      <!-- 📲 Sección Oficial de Instalación PWA en el Footer -->
+      <div class="mb-10 p-5 sm:p-7 rounded-3xl bg-gradient-to-br from-[#1F0A12] via-[#150A0D] to-[#0A0507] border border-rose-900/60 flex flex-col md:flex-row items-center justify-between gap-5 shadow-2xl">
+        <div class="flex items-center gap-4 text-center sm:text-left">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-600 to-rose-700 flex items-center justify-center text-3xl shadow-lg shadow-rose-950/60 shrink-0">
+            🎂
+          </div>
+          <div>
+            <div class="flex items-center justify-center sm:justify-start gap-2">
+              <h4 class="text-white font-bold text-base sm:text-lg font-display">Instalar la App de Pastelería Pato</h4>
+              <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">PWA 1-Click</span>
+            </div>
+            <p class="text-gray-400 text-xs mt-1 max-w-xl">
+              Agregá la pastelería a la pantalla de inicio de tu celular o computadora para consultar delicias y pedir por WhatsApp al instante, sin ocupar memoria.
+            </p>
+          </div>
+        </div>
+        <button onclick="window.installPwa()" 
+                type="button"
+                title="Instalar Pastelería Pato en tu dispositivo"
+                class="inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-rose-600 to-brand-600 hover:from-rose-500 hover:to-brand-500 text-white font-bold text-xs sm:text-sm py-3.5 px-6 rounded-2xl shadow-xl shadow-rose-950/50 hover:scale-[1.02] active:scale-95 transition-all shrink-0 cursor-pointer">
+          <span class="text-base">📲</span>
+          <span>Instalar Aplicación</span>
+        </button>
+      </div>
+
+      <!-- Barra de Identidad y Créditos -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left pt-6 border-t border-gray-900">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">🎂</span>
+          <div>
+            <p class="text-white font-bold text-sm font-display">PASTELERÍA PATO</p>
+            <p class="text-gray-500 text-[11px]">Pastelería Artesanal • Calle Nervo y Lainez, Haedo, Buenos Aires</p>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center gap-1.5 sm:gap-3 text-[11px]">
+          <a href="admin.html" class="text-amber-400 hover:text-white font-semibold underline underline-offset-4 transition-colors">
+            ⚙️ Panel Dueño (admin.html)
+          </a>
+          <span class="hidden sm:inline text-gray-700">•</span>
+          <span class="text-gray-400">© 2026 Pastelería Pato. Todos los derechos reservados.</span>
+          <span class="hidden sm:inline text-gray-700">•</span>
+          <span class="text-rose-400 font-medium">Desarrollado por GastroWeb Studio 360</span>
         </div>
       </div>
 
-      <div class="flex flex-col sm:flex-row items-center gap-1.5 sm:gap-3 text-[11px]">
-        <a href="admin.html" class="text-amber-400 hover:text-white font-semibold underline underline-offset-4 transition-colors">
-          ⚙️ Panel Dueño (admin.html)
-        </a>
-        <span class="hidden sm:inline text-gray-700">•</span>
-        <span class="text-gray-400">© 2026 Pastelería Pato. Todos los derechos reservados.</span>
-        <span class="hidden sm:inline text-gray-700">•</span>
-        <span class="text-rose-400 font-medium">Desarrollado por GastroWeb Studio 360</span>
-      </div>
     </div>
   </footer>
 

@@ -566,18 +566,39 @@
   <!-- ========================================================================
        4. FOOTER SIMPLE DEL PANEL
        ======================================================================== -->
-  <footer class="bg-gray-900 text-gray-400 py-6 text-xs border-t border-gray-800 mt-auto">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-      <div class="flex items-center gap-2">
-        <span>🎂</span>
-        <span class="text-white font-bold">Pastelería Pato • Panel de Administración</span>
-        <span class="text-gray-500">| Nervo y Lainez, Haedo, Buenos Aires</span>
+  <footer class="bg-gray-950 text-gray-400 py-8 text-xs border-t border-gray-900 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+
+      <!-- Tarjeta de Instalación del Panel -->
+      <div class="mb-6 p-4 sm:p-5 rounded-2xl bg-gray-900/90 border border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg">
+        <div class="flex items-center gap-3 text-center sm:text-left">
+          <span class="text-2xl">📲</span>
+          <div>
+            <p class="text-white font-bold text-xs sm:text-sm">Instalá el Panel de Control en tu celular</p>
+            <p class="text-gray-400 text-[11px]">Accedé en 1 toque directo desde tu pantalla de inicio para cambiar precios y stock al instante.</p>
+          </div>
+        </div>
+        <button onclick="window.installPwa()" 
+                type="button"
+                class="inline-flex items-center justify-center gap-2 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow-md transition-all active:scale-95 shrink-0 cursor-pointer">
+          <span>📲</span>
+          <span>Instalar Panel</span>
+        </button>
       </div>
-      <div class="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-[11px] text-gray-400">
-        <span>© 2026 Pastelería Pato. Todos los derechos reservados.</span>
-        <span class="hidden sm:inline text-gray-700">•</span>
-        <span class="text-rose-400 font-medium">Desarrollado por GastroWeb Studio 360</span>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left pt-4 border-t border-gray-900">
+        <div class="flex items-center gap-2">
+          <span>🎂</span>
+          <span class="text-white font-bold">Pastelería Pato • Panel de Administración</span>
+          <span class="text-gray-500">| Nervo y Lainez, Haedo, Buenos Aires</span>
+        </div>
+        <div class="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-[11px] text-gray-400">
+          <span>© 2026 Pastelería Pato. Todos los derechos reservados.</span>
+          <span class="hidden sm:inline text-gray-700">•</span>
+          <span class="text-rose-400 font-medium">Desarrollado por GastroWeb Studio 360</span>
+        </div>
       </div>
+
     </div>
   </footer>
 
