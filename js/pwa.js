@@ -52,11 +52,14 @@ if (typeof window !== "undefined") {
     showInstallButtons();
   });
 
-  // Mostrar botones siempre si no está en modo standalone
+  // Mostrar u ocultar botones según estado de instalación
   document.addEventListener("DOMContentLoaded", () => {
-    if (!isStandalone) {
+    const isAlreadyInstalled = isStandalone || (typeof localStorage !== "undefined" && localStorage.getItem("pato_pwa_installed") === "true");
+    if (!isAlreadyInstalled) {
       showInstallButtons();
       setupMobileBanner();
+    } else {
+      hideInstallButtons();
     }
   });
 }
@@ -65,7 +68,11 @@ if (typeof window !== "undefined") {
  * Muestra los botones de instalación en la interfaz
  */
 function showInstallButtons() {
-  if (isStandalone) return;
+  const isAlreadyInstalled = isStandalone || (typeof localStorage !== "undefined" && localStorage.getItem("pato_pwa_installed") === "true");
+  if (isAlreadyInstalled) {
+    hideInstallButtons();
+    return;
+  }
   const installBtns = document.querySelectorAll(".pwa-install-btn");
   installBtns.forEach((btn) => {
     btn.classList.remove("hidden");
@@ -166,9 +173,9 @@ function showInstallInstructionsModal() {
         </div>
       </div>
 
-      <button onclick="document.getElementById('pwa-instructions-modal').classList.add('hidden')" 
+      <button onclick="window.confirmPwaInstalled()" 
               class="w-full bg-gradient-to-r from-brand-600 to-rose-600 hover:from-brand-500 hover:to-rose-500 text-white font-bold py-3 rounded-xl text-xs uppercase tracking-wider transition-transform active:scale-95 shadow-lg shadow-rose-900/40">
-        ¡Entendido!
+        ¡Listo, ya la agregué!
       </button>
     </div>
   `;
@@ -177,10 +184,40 @@ function showInstallInstructionsModal() {
 }
 
 /**
+ * Marca la app como agregada/instalada y oculta los elementos en pantalla
+ */
+window.confirmPwaInstalled = function () {
+  try {
+    localStorage.setItem("pato_pwa_installed", "true");
+    sessionStorage.setItem("pato_pwa_banner_dismissed", "true");
+  } catch (e) {}
+
+  const modal = document.getElementById("pwa-instructions-modal");
+  if (modal) modal.classList.add("hidden");
+
+  hideInstallButtons();
+
+  if (typeof window.Toastify === "function") {
+    window.Toastify({
+      text: "🎂 ¡Excelente! Accedé siempre a Pastelería Pato desde el icono de tu pantalla.",
+      duration: 3500,
+      gravity: "bottom",
+      position: "center",
+      style: {
+        background: "linear-gradient(135deg, #059669 0%, #047857 100%)",
+        borderRadius: "14px",
+        color: "#FFFFFF"
+      }
+    }).showToast();
+  }
+};
+
+/**
  * Banner flotante específico para celulares
  */
 function setupMobileBanner() {
-  if (!isMobile || isStandalone) return;
+  const isAlreadyInstalled = isStandalone || (typeof localStorage !== "undefined" && localStorage.getItem("pato_pwa_installed") === "true");
+  if (!isMobile || isAlreadyInstalled) return;
   if (sessionStorage.getItem("pato_pwa_banner_dismissed") === "true") return;
 
   const existing = document.getElementById("pwa-mobile-floating-banner");
