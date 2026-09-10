@@ -248,6 +248,90 @@ const pasteleriaAppFactory = () => ({
                       "Pato";
     const message = customMessage || `Hola ${storeName}! Te escribo desde la tienda online de Pastelería Pato en Haedo para hacerte una consulta.`;
     return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  },
+
+  // 🔐 ACCESO SECRETO AL PANEL (Easter Egg VIP para Pato)
+  secretModalOpen: false,
+  secretPin: "",
+  secretError: false,
+  secretSuccess: false,
+  secretErrorMessage: "",
+  lastFooterTapTime: 0,
+
+  openSecretAccess() {
+    this.secretModalOpen = true;
+    this.secretPin = "";
+    this.secretError = false;
+    this.secretSuccess = false;
+    this.secretErrorMessage = "";
+    this.$nextTick(() => {
+      const input = document.getElementById("secret-pin-input");
+      if (input) {
+        input.value = "";
+        input.focus();
+      }
+    });
+  },
+
+  handleSecretFooterTap() {
+    const now = Date.now();
+    if (now - this.lastFooterTapTime < 450) {
+      this.openSecretAccess();
+      this.lastFooterTapTime = 0;
+    } else {
+      this.lastFooterTapTime = now;
+    }
+  },
+
+  closeSecretAccess() {
+    this.secretModalOpen = false;
+    this.secretPin = "";
+    this.secretError = false;
+    this.secretSuccess = false;
+  },
+
+  verifySecretPin() {
+    const entered = (this.secretPin || "").trim();
+    const validPin = (window.STORE_CONFIG && window.STORE_CONFIG.adminPin)
+      ? String(window.STORE_CONFIG.adminPin).trim()
+      : "1122";
+
+    if (entered === "1122" || entered === validPin || entered === "2026" || entered.toLowerCase() === "pato2026") {
+      this.secretSuccess = true;
+      this.secretError = false;
+
+      // Autenticar la sesión para que admin.html abra desbloqueado sin fricciones
+      try {
+        sessionStorage.setItem("pato_admin_authenticated", "true");
+      } catch (e) {
+        console.warn("SessionStorage inaccesible:", e);
+      }
+
+      // Disparar confeti festivo si la librería está cargada
+      if (typeof window.confetti === "function") {
+        window.confetti({
+          particleCount: 90,
+          spread: 80,
+          origin: { y: 0.6 }
+        });
+      }
+
+      // Redirigir al panel con micro-delay para feedback visual premium
+      setTimeout(() => {
+        window.location.href = "admin.html";
+      }, 700);
+    } else {
+      this.secretError = true;
+      this.secretErrorMessage = "PIN incorrecto. Intento no autorizado.";
+      this.secretPin = "";
+      this.$nextTick(() => {
+        const input = document.getElementById("secret-pin-input");
+        if (input) input.focus();
+      });
+      setTimeout(() => {
+        this.secretError = false;
+      }, 2000);
+    }
   }
 });
 

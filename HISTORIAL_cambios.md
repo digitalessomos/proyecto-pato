@@ -4,6 +4,27 @@ Registro cronológico de modificaciones técnicas, correcciones y mejoras aplica
 
 ---
 
+## [2026-09-10] - Acceso Secreto VIP "Easter Egg" en Footer con PIN `1122` (`index.html` → `admin.html`)
+
+### 📌 Categoría
+**Experiencia de Usuario Premium / Seguridad por Ocultamiento / Microinteracciones & Easter Eggs**
+
+### 🔍 Diagnóstico & Requerimiento
+* **Acceso camuflado y exclusivo para el dueño:** Se requería una vía de acceso oculta para Pato desde la misma tienda pública sin que los clientes convencionales vean botones administrativos.
+* **Mecanismo:** Doble clic (o doble tap en celulares) sobre la identidad "PASTELERÍA PATO" en el pie de página, abriendo una ventana modal con el mensaje personalizado *"¿Hey Pato Bro deseas acceder al panel?"* y solicitud de clave `"1122"`.
+
+### 🛠️ Cambios Realizados
+1. **Trigger Táctil y de Doble Clic:**
+   * Se configuraron los eventos `@dblclick="openSecretAccess()"` y `@click="handleSecretFooterTap()"` (con detección de doble tap <450ms) en el contenedor de marca del footer en `index.html`.
+2. **Modal Flotante de Lujo (Glassmorphism):**
+   * Integración de tarjeta oscura con borde de neón frambuesa (`border-rose-500/40`), desenfoque de fondo (`backdrop-blur-md`), badge `"Acceso Reservado • Modo Dueña"`, campo numérico con autoenfoque y efecto `animate-shake` ante errores.
+3. **Autenticación Inmediata y Transición Fluida:**
+   * Al validar `"1122"`, se persiste `sessionStorage.setItem("pato_admin_authenticated", "true")`, se detona confeti festivo y se redirige a `admin.html` ya completamente desbloqueado en menos de 700 ms.
+4. **Sincronización Global de PIN:**
+   * Actualización de `adminPin: "1122"` en `data/config.js`, `GEMINI.md` y soporte en `js/admin.js`.
+
+---
+
 ## [2026-09-10] - Desacoplamiento Visual de Accesos Administrativos en la Tienda Pública (`index.html`)
 
 ### 📌 Categoría

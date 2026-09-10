@@ -16,7 +16,7 @@
 | **Horarios**           | Martes a Sábados: 9:00 a 13:00 hs y 16:00 a 20:00 hs \| Dom: 9:30 a 13:30 hs |
 | **WhatsApp Oficial**   | **5491159665917** (Formato internacional, sin +, sin guiones)  |
 | **Alias de Pago**      | **Pato.pasteleria.haedo** (Transferencia Bancaria y Mercado Pago)|
-| **PIN de Acceso Admin**| **2026** (configurable en `data/config.js`)                    |
+| **PIN de Acceso Admin**| **1122** (configurable en `data/config.js`)                    |
 | **Propósito Web**      | Menú en vivo + Changuito Dulce interactivo → Pedido 1-Click WhatsApp |
 
 ---

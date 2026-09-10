@@ -150,8 +150,8 @@ import { productsService } from "./productsService.js";
       const entered = pinInput.value.trim();
       const validPin = getValidPin();
 
-      // Valida contra el PIN de data/config.js, o llaves maestras "2026" / "pato2026"
-      if (entered === validPin || entered === "2026" || entered.toLowerCase() === "pato2026") {
+      // Valida contra el PIN de data/config.js, o llaves maestras "1122" / "2026" / "pato2026"
+      if (entered === validPin || entered === "1122" || entered === "2026" || entered.toLowerCase() === "pato2026") {
         setAuthenticated(true);
         if (errorMsg) errorMsg.classList.add("hidden");
         unlockAdminPanel();

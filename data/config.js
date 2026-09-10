@@ -23,7 +23,7 @@ const STORE_CONFIG = {
   titularPago: "Pato (Pastelería Pato)",
 
   // 🔐 PIN DE SEGURIDAD PARA ACCESO A PANEL ADMIN (admin.html)
-  adminPin: "2026",
+  adminPin: "1122",
 
   // 🏪 Datos de Identidad del Comercio
   nombre: "Pastelería Pato",
