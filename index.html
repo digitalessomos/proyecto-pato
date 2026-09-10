@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pastelería Pato | Pastelería Artesanal en Haedo, Buenos Aires</title>
-  <meta name="description" content="Tienda online y panel de administración para Pastelería Pato en Haedo, Buenos Aires. Tortas artesanales, tartas dulces y pedidos por WhatsApp con sincronización en tiempo real.">
+  <meta name="description" content="Tienda online de Pastelería Pato en Haedo, Buenos Aires. Tortas artesanales, tartas dulces y pedidos por WhatsApp con sincronización en tiempo real.">
   <meta property="og:title" content="Pastelería Pato | Pastelería Artesanal en Haedo, Buenos Aires" />
-  <meta property="og:description" content="Tienda online y panel de administración para Pastelería Pato en Haedo, Buenos Aires. Tortas artesanales, tartas dulces y pedidos por WhatsApp con sincronización en tiempo real." />
+  <meta property="og:description" content="Tienda online de Pastelería Pato en Haedo, Buenos Aires. Tortas artesanales, tartas dulces y pedidos por WhatsApp con sincronización en tiempo real." />
   
   <meta name="author" content="GastroWeb Studio 360 • Pastelería Pato">
   <meta name="copyright" content="© 2026 GastroWeb Studio 360 & Pastelería Pato. Todos los derechos reservados.">
@@ -133,10 +133,6 @@
         <span>🕒 Mar a Sáb: 9:00 a 13:00 | 16:30 a 20:00 • Dom: 9:00 a 13:30 hs</span>
         <span class="hidden md:inline text-white/40">•</span>
         <span class="hidden md:inline text-white font-medium">¡Horneado fresco todos los días!</span>
-        <span class="text-white/40">•</span>
-        <a href="admin.html" class="text-amber-300 hover:text-white font-bold flex items-center gap-1 transition-colors">
-          <span>⚙️ Panel Dueño</span>
-        </a>
       </div>
     </div>
   </div>
@@ -169,7 +165,7 @@
         <a href="#ubicacion" class="hover:text-rose-400 transition-colors">Cómo Llegar</a>
       </nav>
 
-      <!-- Botones de Acción: Carrito, Admin y WhatsApp -->
+      <!-- Botones de Acción: Carrito, PWA y WhatsApp -->
       <div class="flex items-center gap-2 sm:gap-2.5">
         
         <!-- Botón de Instalación PWA (Visible en dispositivos compatibles) -->
@@ -179,14 +175,6 @@
           <span>📲</span>
           <span>Instalar</span>
         </button>
-
-        <!-- Acceso al Panel de Control Admin -->
-        <a href="admin.html" 
-           title="Abrir Panel de Control del Dueño"
-           class="inline-flex items-center gap-1.5 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 text-amber-300 hover:text-amber-200 text-xs font-bold py-2 px-2.5 sm:px-3 rounded-xl transition-all">
-          <span>⚙️</span>
-          <span class="hidden sm:inline">Admin</span>
-        </a>
 
         <!-- Botón del Changuito / Carrito Reactivo -->
         <button @click="$store.cart.openDrawer()" 
@@ -279,10 +267,10 @@
           </svg>
         </button>
 
-        <a href="admin.html" 
-           class="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md font-semibold px-6 py-4 rounded-2xl active:scale-95 transition-all text-base flex items-center justify-center gap-2">
-          <span>⚙️ Panel del Dueño</span>
-        </a>
+        <button @click="scrollTo('el-puesto')" 
+                class="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md font-semibold px-6 py-4 rounded-2xl active:scale-95 transition-all text-base flex items-center justify-center gap-2 font-display">
+          <span>👩‍🍳 Conocer a Pato</span>
+        </button>
       </div>
 
       <!-- Controles del Slider (Dots) -->
@@ -698,10 +686,6 @@
         </div>
 
         <div class="flex flex-col sm:flex-row items-center gap-1.5 sm:gap-3 text-[11px]">
-          <a href="admin.html" class="text-amber-400 hover:text-white font-semibold underline underline-offset-4 transition-colors">
-            ⚙️ Panel Dueño (admin.html)
-          </a>
-          <span class="hidden sm:inline text-gray-700">•</span>
           <span class="text-gray-400">© 2026 Pastelería Pato. Todos los derechos reservados.</span>
           <span class="hidden sm:inline text-gray-700">•</span>
           <span class="text-rose-400 font-medium">Desarrollado por GastroWeb Studio 360</span>

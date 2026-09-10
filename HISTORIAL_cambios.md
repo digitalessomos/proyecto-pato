@@ -4,6 +4,29 @@ Registro cronológico de modificaciones técnicas, correcciones y mejoras aplica
 
 ---
 
+## [2026-09-10] - Desacoplamiento Visual de Accesos Administrativos en la Tienda Pública (`index.html`)
+
+### 📌 Categoría
+**Seguridad por Ocultamiento / Experiencia de Usuario (Cliente) / Arquitectura de Frontend**
+
+### 🔍 Diagnóstico
+* **Exposición innecesaria del panel administrativo a clientes:** `index.html` contenía 4 puntos directos de acceso visible a `admin.html` (barra superior de anuncios, barra de navegación principal, llamada a la acción en el Hero y enlaces del pie de página), además de referencias a "panel de administración" en las metaetiquetas SEO (`description` y `og:description`).
+* **Enfoque de cliente:** La tienda pública (`index.html`) está destinada exclusivamente a compradores y comensales que consultan delicias y realizan pedidos por WhatsApp. El panel del dueño (`admin.html`) debe mantenerse reservado para uso interno.
+
+### 🛠️ Cambios Realizados
+1. **Limpieza de Barra Superior (`Topbar`):**
+   * Se eliminó el enlace `⚙️ Panel Dueño` y el separador en la franja informativa superior.
+2. **Depuración del Menú de Navegación (`Header`):**
+   * Se removió el botón flotante ámbar `⚙️ Admin` junto a los botones de Carrito y WhatsApp.
+3. **Optimización del Hero Principal:**
+   * Se sustituyó el botón secundario `⚙️ Panel del Dueño` por una llamada a la acción enfocada al cliente: `👩‍🍳 Conocer a Pato` (con navegación suave a la sección de historia y taller `#el-puesto`), preservando el balance visual de 2 botones.
+4. **Limpieza del Pie de Página (`Footer`):**
+   * Se retiró el enlace directo `⚙️ Panel Dueño (admin.html)` de la barra inferior de créditos.
+5. **Depuración de Metadatos SEO y Open Graph:**
+   * Se eliminaron las menciones a "panel de administración" en `<meta name="description">` y `<meta property="og:description">`.
+
+---
+
 ## [2026-09-10] - Implementación de Capacidades PWA e Instalación Nativa en Android / iOS
 
 ### 📌 Categoría
